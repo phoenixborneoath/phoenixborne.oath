@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Phoenixborne Oath — Official Realm</title>
+
+  <!-- Font gothic & clean -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #050507;
+      --bg-alt: #0b0b10;
+      --silver: #d5d5d5;
+      --silver-strong: #f5f5f5;
+      --silver-deep: #8f8f8f;
+      --accent: #ffffff;
+      --border-soft: rgba(213, 213, 213, 0.12);
+      --shadow-soft: 0 0 40px rgba(255, 255, 255, 0.05);
+      --radius: 18px;
+      --transition: 200ms ease-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at top, #17171f 0, #050507 45%);
+      color: var(--silver);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+    }
+
+    .wrapper {
+      width: 100%;
+      max-width: 1080px;
+      padding: 32px 20px 48px;
+      margin: auto;
+    }
+
+    .card {
+      background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(0,0,0,0.8));
+      border-radius: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: var(--shadow-soft);
+      padding: 28px 22px 30px;
+      backdrop-filter: blur(14px);
+    }
+
+    @media (min-width: 900px) {
+      .card {
+        padding: 36px 40px 40px;
+      }
+    }
+
+    header {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      border-bottom: 1px solid var(--border-soft);
+      padding-bottom: 22px;
+      margin-bottom: 26px;
+    }
+
+    .brand-mark {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .crest {
+      width: 58px;
+      height: 58px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 22px rgba(255,255,255,0.14);
+    }
+
+    .crest::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top, rgba(255,255,255,0.4), transparent 60%);
+      opacity: 0.4;
+      mix-blend-mode: screen;
+    }
+
+    .crest span {
+      font-family: "Cinzel", serif;
+      font-weight: 800;
+      font-size: 24px;
+      letter-spacing: 0.18em;
+      color: var(--silver-strong);
+      z-index: 1;
+    }
+
+    .brand-text h1 {
+      font-family: "Cinzel", serif;
+      font-weight: 700;
+      font-size: 1.4rem;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--silver-strong);
+    }
+
+    .brand-text h1 span {
+      font-weight: 400;
+      opacity: 0.9;
+    }
+
+    .brand-text p {
+      font-size: 0.9rem;
+      color: var(--silver-deep);
+      margin-top: 4px;
+      max-width: 420px;
+    }
+
+    .tagline {
+      font-family: "Cinzel", serif;
+      font-size: 0.9rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--silver-deep);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 860px) {
+      .grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    /* Main social block */
+    .section {
+      background: rgba(3, 3, 5, 0.8);
+      border-radius: var(--radius);
+      border: 1px solid var(--border-soft);
+      padding: 18px 18px 22px;
+      box-shadow: 0 0 26px rgba(0,0,0,0.7);
+    }
+
+    .section + .section {
+      margin-top: 16px;
+    }
+
+    .section-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      color: var(--silver-deep);
+      margin-bottom: 14px;
+    }
+
+    .hero-copy h2 {
+      font-family: "Cinzel", serif;
+      font-size: 1.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--silver-strong);
+      margin-bottom: 8px;
+    }
+
+    .hero-copy p {
+      font-size: 0.9rem;
+      color: var(--silver-deep);
+      line-height: 1.5;
+      max-width: 420px;
+    }
+
+    .social-links {
+      margin-top: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .social-btn {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: radial-gradient(circle at top left, rgba(255,255,255,0.16), rgba(0,0,0,0.95));
+      color: var(--silver-strong);
+      font-size: 0.78rem;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition), background var(--transition);
+      overflow: hidden;
+    }
+
+    .social-btn span.label {
+      z-index: 1;
+    }
+
+    .social-btn span.handle {
+      font-size: 0.7rem;
+      color: var(--silver-deep);
+    }
+
+    .social-btn::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, rgba(255,255,255,0.35), transparent 35%, transparent 65%, rgba(255,255,255,0.25));
+      opacity: 0;
+      transition: opacity var(--transition), transform 260ms ease-out;
+      transform: translateX(-20%);
+    }
+
+    .social-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255, 255, 255, 0.65);
+      box-shadow: 0 0 24px rgba(255,255,255,0.18);
+      background: radial-gradient(circle at top left, rgba(255,255,255,0.24), rgba(0,0,0,0.98));
+    }
+
+    .social-btn:hover::before {
+      opacity: 0.9;
+      transform: translateX(0);
+    }
+
+    /* Secondary column */
+    .mini-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    .mini-item {
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: radial-gradient(circle at top, rgba(255,255,255,0.06), rgba(0,0,0,0.95));
+      font-size: 0.78rem;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .mini-label {
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--silver-deep);
+      font-size: 0.7rem;
+    }
+
+    .mini-title {
+      font-family: "Cinzel", serif;
+      font-size: 0.9rem;
+      color: var(--silver-strong);
+    }
+
+    .mini-meta {
+      font-size: 0.78rem;
+      color: var(--silver-deep);
+    }
+
+    footer {
+      margin-top: 26px;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      color: var(--silver-deep);
+      text-align: center;
+    }
+
+    footer span {
+      color: var(--silver-strong);
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="card">
+      <header>
+        <div class="brand-mark">
+          <div class="crest">
+            <span>PO</span>
+          </div>
+          <div class="brand-text">
+            <h1>PHOENIXBORNE <span>OATH</span></h1>
+            <p>Brand yang lahir dari abu – setiap artikel kaos membawa satu kisah kebangkitan.</p>
+          </div>
+        </div>
+        <div class="tagline">Gothic • Silver • Oathbound</div>
+      </header>
+
+      <div class="grid">
+        <!-- MAIN COLUMN -->
+        <section class="section">
+          <div class="section-title">Gerbang utama</div>
+          <div class="hero-copy">
+            <h2>Masuk ke dunia Phoenixborne</h2>
+            <p>
+              Semua link resmi Phoenixborne Oath ada di sini. Pilih platform favoritmu dan ikuti perjalanan dari tiap
+              cerita, tiap desain, tiap kebangkitan.
+            </p>
+          </div>
+
+          <div class="social-links">
+            <!-- Ganti # dengan link asli -->
+            <a href="#" class="social-btn" target="_blank" rel="noopener">
+              <span class="label">Instagram</span>
+              <span class="handle">@phoenixborne.oath</span>
+            </a>
+
+            <a href="#" class="social-btn" target="_blank" rel="noopener">
+              <span class="label">TikTok</span>
+              <span class="handle">@phoenixborne.oath</span>
+            </a>
+
+            <a href="#" class="social-btn" target="_blank" rel="noopener">
+              <span class="label">X (Twitter)</span>
+              <span class="handle">@phoenixborne</span>
+            </a>
+
+            <a href="#" class="social-btn" target="_blank" rel="noopener">
+              <span class="label">Facebook</span>
+              <span class="handle">Phoenixborne Oath</span>
+            </a>
+
+            <a href="#" class="social-btn" target="_blank" rel="noopener">
+              <span class="label">YouTube</span>
+              <span class="handle">Phoenixborne Oath</span>
+            </a>
+
+            <!-- contoh: link toko -->
+            <a href="#" class="social-btn" target="_blank" rel="noopener">
+              <span class="label">Store</span>
+              <span class="handle">Official Shop</span>
+            </a>
+          </div>
+        </section>
+
+        <!-- SIDE COLUMN -->
+        <section class="section">
+          <div class="section-title">Tentang brand</div>
+
+          <div class="mini-list">
+            <div class="mini-item">
+              <div class="mini-label">Narasi</div>
+              <div class="mini-title">Lahir dari abu, terikat sumpah</div>
+              <div class="mini-meta">
+                Setiap desain kaos membawa cerita: kematian, kebangkitan, dan sumpah baru yang tidak bisa dibatalkan.
+              </div>
+            </div>
+
+            <div class="mini-item">
+              <div class="mini-label">Mood</div>
+              <div class="mini-title">Gothic klasik, silver–white</div>
+              <div class="mini-meta">
+                Palet hitam pekat, garis putih–perak, detail seperti ukiran logam kuno – elegan tapi tetap brutal.
+              </div>
+            </div>
+
+            <div class="mini-item">
+              <div class="mini-label">Kontak</div>
+              <div class="mini-title">Kolaborasi & pemesanan</div>
+              <div class="mini-meta">
+                Email: <strong>halo@phoenixborneoath.com</strong><br />
+                WhatsApp: <strong>+62-8xx-xxxx-xxxx</strong>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <footer>
+        <span>Phoenixborne Oath</span> — sworn to rise again.
+      </footer>
+    </div>
+  </div>
+</body>
+</html>
