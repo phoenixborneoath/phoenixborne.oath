@@ -1,267 +1,215 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>Phoenixborne Oath — Official Shop</title>
 
-  <!-- Font -->
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
   <style>
-    :root{
-      --bg:#050507;
-      --card:#0b0b10;
-      --silver:#d5d5d5;
-      --muted:#9a9a9a;
-      --accent:#f5f5f5;
-      --glass: rgba(255,255,255,0.03);
-      --radius:16px;
-    }
+    :root{--bg:#050507;--card:#0b0b10;--silver:#d5d5d5;--muted:#9a9a9a;--accent:#f5f5f5;--glass:rgba(255,255,255,0.03);--radius:12px}
     *{box-sizing:border-box}
-    body{
-      margin:0; font-family:Inter, system-ui, -apple-system, sans-serif;
-      background: radial-gradient(circle at top, #121217 0, var(--bg) 50%);
-      color:var(--silver);
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
-      padding:28px;
-    }
-
-    /* wrapper */
-    .wrap{max-width:1100px;margin:0 auto;}
-
-    /* top card */
-    .top {
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.6));
-      border-radius:22px; padding:22px; display:flex; gap:20px; align-items:center;
-      border:1px solid rgba(255,255,255,0.06); box-shadow:0 8px 40px rgba(0,0,0,0.6);
-    }
-    .crest {
-      width:84px;height:84px;border-radius:999px;overflow:hidden;
-      display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.14);
-      background: radial-gradient(circle at top, rgba(255,255,255,0.03), rgba(0,0,0,0.6));
-    }
-    .crest img{width:66px;height:66px;object-fit:contain;border-radius:50%}
-    .brand h1{font-family:Cinzel, serif;letter-spacing:0.14em;font-size:20px;margin:0;color:var(--accent)}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,sans-serif;background:radial-gradient(circle at top,#121217 0,var(--bg) 50%);color:var(--silver);padding:22px}
+    .wrap{max-width:1060px;margin:0 auto}
+    .top{display:flex;gap:18px;align-items:center;padding:18px;border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.6));border:1px solid rgba(255,255,255,0.06)}
+    .crest{width:72px;height:72px;border-radius:999px;overflow:hidden;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.12);background:radial-gradient(circle at top,rgba(255,255,255,0.03),rgba(0,0,0,0.6))}
+    .crest img{width:56px;height:56px;object-fit:contain;border-radius:50%}
+    .brand h1{font-family:Cinzel,serif;margin:0;font-size:20px;letter-spacing:0.14em;color:var(--accent)}
     .brand p{margin:6px 0 0;color:var(--muted);font-size:13px}
-
-    /* product area */
-    .controls{display:flex;gap:12px;align-items:center;margin:18px 0 10px;flex-wrap:wrap}
-    .search{flex:1;min-width:220px}
-    .search input{
-      width:100%;padding:10px 12px;border-radius:999px;background:transparent;border:1px solid rgba(255,255,255,0.06);
-      color:var(--silver);outline:none;
-    }
-    .filter{display:flex;gap:8px}
-    .btn{
-      padding:9px 12px;border-radius:999px;border:1px solid rgba(255,255,255,0.06);
-      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.6));
-      color:var(--silver);cursor:pointer;font-weight:600;font-size:13px;
-    }
-
-    .grid{
-      display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:14px;
-    }
-    @media (max-width:920px){.grid{grid-template-columns:repeat(2,1fr)}}
-    @media (max-width:560px){.grid{grid-template-columns:repeat(1,1fr)}}
-
-    .card{
-      background:var(--card);border-radius:14px;padding:14px;border:1px solid rgba(255,255,255,0.04);
-      display:flex;flex-direction:column;gap:12px;
-    }
-    .thumb{height:220px;border-radius:10px;overflow:hidden;background:#000;display:flex;align-items:center;justify-content:center}
-    .thumb img{width:100%;height:100%;object-fit:cover;display:block}
-    .title{font-family:Cinzel,serif;font-size:16px;letter-spacing:0.06em;margin:0;color:var(--accent)}
-    .meta{font-size:13px;color:var(--muted);margin-top:2px}
-    .price{font-weight:700;color:var(--silver);margin-top:8px}
-    .actions{display:flex;gap:8px;margin-top:8px}
-
-    .buy{flex:1;background:transparent;border:1px solid rgba(255,255,255,0.08);padding:10px;border-radius:10px;cursor:pointer}
-    .view{background:transparent;border:1px dashed rgba(255,255,255,0.08);padding:10px;border-radius:10px;cursor:pointer}
-
-    /* footer info */
-    .info{margin-top:28px;display:flex;gap:18px;flex-wrap:wrap}
-    .box{flex:1;min-width:220px;background:rgba(255,255,255,0.02);padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
-    .box h3{margin:0;font-family:Cinzel, serif;font-size:14px;color:var(--accent)}
-    .box p{margin:8px 0 0;color:var(--muted);font-size:13px;line-height:1.45}
-
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}
+    @media(max-width:920px){.grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:560px){.grid{grid-template-columns:1fr}}
+    .card{background:var(--card);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column;gap:10px}
+    .thumb{height:260px;border-radius:8px;overflow:hidden;background:#000;display:flex;align-items:center;justify-content:center}
+    .thumb img{width:100%;height:100%;object-fit:cover}
+    .title{font-family:Cinzel,serif;font-size:16px;margin:0;color:var(--accent)}
+    .meta{font-size:13px;color:var(--muted)}
+    .price{font-weight:700;color:var(--silver)}
+    .actions{display:flex;gap:8px;align-items:center;margin-top:8px}
+    .btn{padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--silver);cursor:pointer}
+    .buy{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.6));}
+    .info{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
+    .box{flex:1;min-width:220px;background:rgba(255,255,255,0.02);padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+    .box h3{margin:0;font-family:Cinzel,serif}
     /* modal */
-    .modal{
-      position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:80;padding:20px
-    }
-    .modal .inner{width:100%;max-width:920px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.6));border-radius:14px;padding:18px;border:1px solid rgba(255,255,255,0.06)}
-    .modal .inner .row{display:flex;gap:16px;align-items:flex-start}
-    .modal img{width:320px;height:320px;object-fit:cover;border-radius:8px}
-    .close{position:absolute;right:18px;top:18px;background:transparent;border:0;color:var(--silver);font-size:18px;cursor:pointer}
-
-    /* small */
-    .small{font-size:12px;color:var(--muted)}
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:90;padding:18px}
+    .modal .inner{width:100%;max-width:760px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.6));border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.06)}
+    .row{display:flex;gap:14px;align-items:flex-start}
+    .row .img{width:320px;height:320px;border-radius:8px;overflow:hidden}
+    .row img{width:100%;height:100%;object-fit:cover}
+    .close{position:absolute;right:22px;top:18px;background:transparent;border:0;color:var(--silver);font-size:18px;cursor:pointer}
+    .form-row{display:flex;gap:8px}
+    .form-row .col{flex:1}
+    input[type="text"],input[type="tel"],select,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--silver);outline:none}
+    label{font-size:13px;color:var(--muted);display:block;margin-bottom:6px}
+    .small{font-size:13px;color:var(--muted)}
+    .bank{background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03)}
   </style>
 </head>
 <body>
   <div class="wrap">
-    <!-- header -->
-    <div class="top" role="banner">
-      <div class="crest">
-        <img src="logo.png" alt="logo" />
-      </div>
+    <div class="top">
+      <div class="crest"><img src="logo.png" alt="logo"/></div>
       <div class="brand">
-        <h1>PHOENIXBORNE <span style="opacity:0.85">OATH</span></h1>
-        <p>Official Shop — merchandise, limited drops, dan kolaborasi. Semua kualitas premium.</p>
-      </div>
-      <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
-        <a class="btn" href="https://phoenixborneoath.github.io/phoenixborne.oath/" target="_blank" rel="noopener">Ke Portal</a>
-        <a class="btn" href="mailto:halo@phoenixborneoath.com">Hubungi</a>
-      </div>
-    </div>
-
-    <!-- controls -->
-    <div class="controls">
-      <div class="search"><input id="q" placeholder="Cari produk (ketik nama atau tag)"></div>
-      <div class="filter">
-        <button class="btn" data-filter="all">Semua</button>
-        <button class="btn" data-filter="tees">T-Shirt</button>
-        <button class="btn" data-filter="limited">Limited</button>
+        <h1>PHOENIXBORNE <span style="opacity:.85">OATH</span></h1>
+        <p>Official Shop — merchandise & limited drops. Pilih produk, isi form, lalu transfer ke rekening.</p>
       </div>
     </div>
 
     <!-- product grid -->
     <div class="grid" id="grid">
-      <!-- contoh produk 1 -->
-      <div class="card" data-tags="tees">
-        <div class="thumb"><img src="https://via.placeholder.com/800x800?text=Design+1" alt=""></div>
-        <div>
-          <h3 class="title">Phoenixborn Sigil Tee</h3>
-          <div class="meta">Black / Cotton 220gsm</div>
-          <div class="price">Rp 199.000</div>
-          <div class="actions">
-            <button class="view" data-id="p1">View</button>
-            <button class="buy" data-buy="https://shopee.co.id/">Buy</button>
-          </div>
+      <!-- product 1 -->
+      <div class="card" data-id="p1" data-title="Phoenixborn Sigil Tee" data-price="Rp 199.000" data-img="https://via.placeholder.com/1000x1000?text=Design+1">
+        <div class="thumb"><img src="https://via.placeholder.com/1000x1000?text=Design+1" alt=""></div>
+        <h3 class="title">Phoenixborn Sigil Tee</h3>
+        <div class="meta">Black / Cotton 220gsm</div>
+        <div class="price">Rp 199.000</div>
+        <div class="actions">
+          <button class="btn view" data-id="p1">View</button>
+          <button class="btn buy buy-btn" data-id="p1">Buy</button>
         </div>
       </div>
 
-      <!-- contoh produk 2 -->
-      <div class="card" data-tags="tees limited">
-        <div class="thumb"><img src="https://via.placeholder.com/800x800?text=Design+2" alt=""></div>
-        <div>
-          <h3 class="title">Ashen Oath Tee (Limited)</h3>
-          <div class="meta">White print / Black shirt</div>
-          <div class="price">Rp 249.000</div>
-          <div class="actions">
-            <button class="view" data-id="p2">View</button>
-            <button class="buy" data-buy="https://shopee.co.id/">Buy</button>
-          </div>
+      <!-- product 2 -->
+      <div class="card" data-id="p2" data-title="Ashen Oath Tee (Limited)" data-price="Rp 249.000" data-img="https://via.placeholder.com/1000x1000?text=Design+2">
+        <div class="thumb"><img src="https://via.placeholder.com/1000x1000?text=Design+2" alt=""></div>
+        <h3 class="title">Ashen Oath Tee (Limited)</h3>
+        <div class="meta">White print / Black shirt</div>
+        <div class="price">Rp 249.000</div>
+        <div class="actions">
+          <button class="btn view" data-id="p2">View</button>
+          <button class="btn buy buy-btn" data-id="p2">Buy</button>
         </div>
       </div>
 
-      <!-- contoh produk 3 -->
-      <div class="card" data-tags="limited">
-        <div class="thumb"><img src="https://via.placeholder.com/800x800?text=Design+3" alt=""></div>
-        <div>
-          <h3 class="title">Resurrection Hoodie</h3>
-          <div class="meta">Heavy fleece, limited run</div>
-          <div class="price">Rp 399.000</div>
-          <div class="actions">
-            <button class="view" data-id="p3">View</button>
-            <button class="buy" data-buy="https://shopee.co.id/">Buy</button>
-          </div>
+      <!-- product 3 -->
+      <div class="card" data-id="p3" data-title="Resurrection Hoodie" data-price="Rp 399.000" data-img="https://via.placeholder.com/1000x1000?text=Design+3">
+        <div class="thumb"><img src="https://via.placeholder.com/1000x1000?text=Design+3" alt=""></div>
+        <h3 class="title">Resurrection Hoodie</h3>
+        <div class="meta">Heavy fleece, limited run</div>
+        <div class="price">Rp 399.000</div>
+        <div class="actions">
+          <button class="btn view" data-id="p3">View</button>
+          <button class="btn buy buy-btn" data-id="p3">Buy</button>
         </div>
       </div>
-
-      <!-- tambahkan produk lain di sini... -->
     </div>
 
     <!-- info -->
-    <div class="info">
+    <div class="info" style="margin-top:22px">
       <div class="box">
         <h3>Pengiriman & Pengembalian</h3>
-        <p>Pengiriman ke seluruh Indonesia. Estimasi 3–7 hari kerja. Pengembalian diterima dalam 7 hari jika produk rusak / tidak sesuai.</p>
+        <p class="small">Pengiriman ke seluruh Indonesia. Estimasi 3–7 hari kerja. Pengembalian diterima dalam 7 hari jika produk rusak / tidak sesuai.</p>
       </div>
       <div class="box">
-        <h3>Pembayaran</h3>
-        <p>Dukungan transfer bank, GoPay/OVO/Dana, dan pembayaran melalui marketplace (Shopee / Tokopedia). Untuk pembayaran manual: transfer ke rekening yang tertera saat checkout.</p>
+        <h3>Pembayaran (Rekening)</h3>
+        <div class="bank">
+          <strong>Bank:</strong> <span id="bank-name">BANK ABC</span><br/>
+          <strong>Nomor Rekening:</strong> <span id="bank-no">REKENING_BANK</span><br/>
+          <strong>Atas Nama:</strong> <span id="bank-an">NAMA PENERIMA</span>
+        </div>
       </div>
       <div class="box">
         <h3>Kontak</h3>
-        <p>Email: <strong>halo@phoenixborneoath.com</strong><br/>WA: <strong>+62-8xx-xxxx-xxxx</strong></p>
+        <p class="small">Email: <strong>halo@phoenixborneoath.com</strong><br/>WA: <strong>+62-8xx-xxxx-xxxx</strong></p>
       </div>
     </div>
   </div>
 
-  <!-- modal -->
+  <!-- modal order -->
   <div class="modal" id="modal">
     <div class="inner" role="dialog" aria-modal="true">
       <button class="close" id="close">✕</button>
       <div class="row">
-        <img id="mimg" src="" alt="">
+        <div class="img"><img id="mimg" src="" alt=""></div>
         <div style="flex:1">
           <h2 id="mtitle" style="font-family:Cinzel,serif;margin-top:0;color:var(--accent)"></h2>
-          <div id="mdesc" class="small"></div>
-          <div id="mprice" style="margin-top:14px;font-weight:700"></div>
-          <div style="margin-top:18px;display:flex;gap:8px">
-            <a id="mbuy" class="btn" href="#" target="_blank" rel="noopener">Beli Sekarang</a>
-            <button id="mclose" class="btn" style="background:transparent">Tutup</button>
-          </div>
+          <div id="mprice" class="small" style="margin-bottom:12px"></div>
+
+          <!-- FORM: kirim ke FormSubmit (ganti EMAIL dengan emailmu) -->
+          <form id="orderForm" action="https://formsubmit.co/YOUR_EMAIL_HERE@example.com" method="POST">
+            <!-- agar FormSubmit tidak menanyakan captcha -->
+            <input type="hidden" name="_captcha" value="false">
+            <!-- redirect ke halaman terima kasih -->
+            <input type="hidden" name="_next" value="https://phoenixborneoath.github.io/phoenixborne.oath/thankyou.html">
+            <input type="hidden" name="product_id" id="product_id" value="">
+            <input type="hidden" name="product_title" id="product_title" value="">
+            <input type="hidden" name="product_price" id="product_price" value="">
+
+            <label>Nama Penerima</label>
+            <input type="text" name="name" required placeholder="Nama lengkap" />
+
+            <label>Nomor HP (WA)</label>
+            <input type="tel" name="phone" required placeholder="+62..." />
+
+            <label>Alamat Lengkap</label>
+            <textarea name="address" rows="3" required placeholder="Jalan, Kota, Kode Pos..."></textarea>
+
+            <div class="form-row" style="margin-top:10px">
+              <div class="col">
+                <label>Size</label>
+                <select name="size" required>
+                  <option value="S">S</option>
+                  <option value="M" selected>M</option>
+                  <option value="L">L</option>
+                  <option value="XL">XL</option>
+                </select>
+              </div>
+              <div class="col">
+                <label>Jumlah</label>
+                <select name="qty" required>
+                  <option value="1" selected>1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="margin-top:12px;display:flex;gap:8px">
+              <button type="submit" class="btn buy" style="flex:1">Kirim Pesanan & Lihat Instruksi Bayar</button>
+              <button type="button" class="btn" id="cancelBtn">Batal</button>
+            </div>
+
+            <p class="small" style="margin-top:10px">Setelah mengirim pesanan, kamu akan diarahkan ke halaman instruksi pembayaran. Pesanan juga akan terkirim ke email kami.</p>
+          </form>
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    // data produk sederhana (bisa di-dinamiskan nanti)
-    const PRODUCTS = {
-      p1:{id:'p1',title:'Phoenixborn Sigil Tee',desc:'Black / Cotton 220gsm. S-M-L-XL', price:'Rp 199.000', img:'https://via.placeholder.com/1000x1000?text=Design+1', buy:'https://shopee.co.id/'},
-      p2:{id:'p2',title:'Ashen Oath Tee (Limited)',desc:'White print on black, limited run',price:'Rp 249.000', img:'https://via.placeholder.com/1000x1000?text=Design+2', buy:'https://shopee.co.id/'},
-      p3:{id:'p3',title:'Resurrection Hoodie',desc:'Heavy fleece, limited run',price:'Rp 399.000', img:'https://via.placeholder.com/1000x1000?text=Design+3', buy:'https://shopee.co.id/'}
-    };
+    // simple product data mapping (already in DOM attributes)
+    function openModal(id){
+      const card = document.querySelector('[data-id="'+id+'"]');
+      const title = card.dataset.title;
+      const price = card.dataset.price;
+      const img = card.dataset.img;
+      document.getElementById('mimg').src = img;
+      document.getElementById('mtitle').textContent = title;
+      document.getElementById('mprice').textContent = price;
+      document.getElementById('product_id').value = id;
+      document.getElementById('product_title').value = title;
+      document.getElementById('product_price').value = price;
+      document.getElementById('modal').style.display = 'flex';
+    }
 
-    // cari elemen
-    const modal=document.getElementById('modal');
-    const mimg=document.getElementById('mimg'), mtitle=document.getElementById('mtitle'), mdesc=document.getElementById('mdesc'), mprice=document.getElementById('mprice'), mbuy=document.getElementById('mbuy');
-    document.querySelectorAll('.view').forEach(btn=>{
-      btn.onclick=e=>{
-        const id=btn.dataset.id;
-        const p=PRODUCTS[id];
-        if(!p) return;
-        mimg.src=p.img; mtitle.textContent=p.title; mdesc.textContent=p.desc; mprice.textContent=p.price; mbuy.href=p.buy;
-        modal.style.display='flex';
-      }
+    document.querySelectorAll('.buy-btn').forEach(b=>{
+      b.addEventListener('click', ()=> openModal(b.dataset.id));
     });
-    document.getElementById('close').onclick = ()=> modal.style.display='none';
-    document.getElementById('mclose').onclick = ()=> modal.style.display='none';
+    document.querySelectorAll('.view').forEach(v=>{
+      v.addEventListener('click', ()=> openModal(v.dataset.id));
+    });
 
-    // tombol buy langsung redirect
+    document.getElementById('close').addEventListener('click', ()=> document.getElementById('modal').style.display='none');
+    document.getElementById('cancelBtn').addEventListener('click', ()=> document.getElementById('modal').style.display='none');
+
+    // simple buy button: redirect to shop external if you want (optional)
     document.querySelectorAll('.buy').forEach(b=>{
-      b.onclick = ()=> {
-        const url=b.dataset.buy;
-        window.open(url,'_blank');
-      }
-    });
-
-    // cari (live)
-    document.getElementById('q').addEventListener('input', e=>{
-      const q=e.target.value.trim().toLowerCase();
-      document.querySelectorAll('#grid .card').forEach(card=>{
-        const txt = card.querySelector('.title').textContent.toLowerCase() + ' ' + (card.dataset.tags || '');
-        card.style.display = txt.includes(q) ? '' : 'none';
+      b.addEventListener('click', (e)=> {
+        // form submit handles payment flow
       });
     });
-
-    // filter
-    document.querySelectorAll('[data-filter]').forEach(f=>{
-      f.onclick = ()=>{
-        const tag=f.dataset.filter;
-        if(tag==='all'){ document.querySelectorAll('#grid .card').forEach(c=>c.style.display=''); return; }
-        document.querySelectorAll('#grid .card').forEach(c=>{
-          const tags = (c.dataset.tags||'').split(' ').map(x=>x.trim()).filter(Boolean);
-          c.style.display = tags.includes(tag) ? '' : 'none';
-        });
-      }
-    });
-
   </script>
 </body>
 </html>
-
