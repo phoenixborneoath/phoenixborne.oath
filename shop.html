@@ -210,6 +210,42 @@
         // form submit handles payment flow
       });
     });
-  </script>
+  <script>
+  (function(){
+    const form = document.getElementById('orderForm');
+    if(!form) return;
+
+    form.addEventListener('submit', function(e){
+      // lakukan validasi manual singkat (hilangkan spasi kosong)
+      const requiredFields = ['name','phone','address','size','qty'];
+      for(const f of requiredFields){
+        const el = form.querySelector('[name="'+f+'"]');
+        if(!el || !el.value || !el.value.toString().trim()){
+          e.preventDefault();
+          alert('Tolong isi semua kolom yang wajib.');
+          el && el.focus();
+          return false;
+        }
+      }
+
+      // submit normal, lalu set fallback redirect jika server lambat
+      // simpan url next untuk fallback
+      const nextUrl = form.querySelector('input[name="_next"]')?.value
+                    || 'https://phoenixborneoath.github.io/phoenixborne.oath/thankyou.html';
+
+      // allow normal form submission, but also set a safety timeout:
+      // jika setelah 3 detik page belum berubah, arahkan manual ke halaman thanks
+      setTimeout(function(){
+        // jika masih di page yang sama (form belum redirect), paksa redirect
+        if (window.location.href.indexOf(nextUrl) === -1) {
+          window.location.href = nextUrl;
+        }
+      }, 3000);
+
+      // biarkan form submit berjalan (tidak preventDefault) supaya FormSubmit tetap menerima data
+      return true;
+    });
+  })();
+</script>
 </body>
 </html>
