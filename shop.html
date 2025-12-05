@@ -179,73 +179,98 @@
   </div>
 
   <script>
-    // simple product data mapping (already in DOM attributes)
-    function openModal(id){
-      const card = document.querySelector('[data-id="'+id+'"]');
-      const title = card.dataset.title;
-      const price = card.dataset.price;
-      const img = card.dataset.img;
-      document.getElementById('mimg').src = img;
-      document.getElementById('mtitle').textContent = title;
-      document.getElementById('mprice').textContent = price;
-      document.getElementById('product_id').value = id;
-      document.getElementById('product_title').value = title;
-      document.getElementById('product_price').value = price;
-      document.getElementById('modal').style.display = 'flex';
-    }
+document.addEventListener('DOMContentLoaded', function(){
+  // Element references
+  const modal = document.getElementById('modal');
+  const mimg = document.getElementById('mimg');
+  const mtitle = document.getElementById('mtitle');
+  const mprice = document.getElementById('mprice');
+  const productIdInput = document.getElementById('product_id');
+  const productTitleInput = document.getElementById('product_title');
+  const productPriceInput = document.getElementById('product_price');
+  const orderForm = document.getElementById('orderForm');
+  const closeBtn = document.getElementById('close');
+  const cancelBtn = document.getElementById('cancelBtn');
 
-    document.querySelectorAll('.buy-btn').forEach(b=>{
-      b.addEventListener('click', ()=> openModal(b.dataset.id));
+  // Safety: jika elemen tidak ditemukan, abort with console message
+  if(!orderForm){
+    console.warn('Order form tidak ditemukan (id="orderForm"). Pastikan form ada di halaman.');
+  }
+
+  // Fungsi buka modal berdasarkan id produk
+  function openModal(id){
+    const card = document.querySelector('[data-id="'+id+'"]');
+    if(!card) { console.warn('Card tidak ditemukan untuk id', id); return; }
+    const title = card.dataset.title || '';
+    const price = card.dataset.price || '';
+    const img = card.dataset.img || '';
+    if(mimg) mimg.src = img;
+    if(mtitle) mtitle.textContent = title;
+    if(mprice) mprice.textContent = price;
+    if(productIdInput) productIdInput.value = id;
+    if(productTitleInput) productTitleInput.value = title;
+    if(productPriceInput) productPriceInput.value = price;
+    if(modal) modal.style.display = 'flex';
+    // scroll to top of modal on small screens
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // Event delegation untuk tombol buy / view
+  document.body.addEventListener('click', function(e){
+    const el = e.target.closest && e.target.closest('.buy-btn, .view');
+    if(!el) return;
+    const id = el.dataset.id;
+    if(!id) return;
+    e.preventDefault();
+    openModal(id);
+  });
+
+  // close handlers
+  if(closeBtn) closeBtn.addEventListener('click', ()=> modal.style.display='none');
+  if(cancelBtn) cancelBtn.addEventListener('click', ()=> modal.style.display='none');
+  // close when click outside inner
+  if(modal){
+    modal.addEventListener('click', function(ev){
+      if(ev.target === modal) modal.style.display = 'none';
     });
-    document.querySelectorAll('.view').forEach(v=>{
-      v.addEventListener('click', ()=> openModal(v.dataset.id));
-    });
+  }
 
-    document.getElementById('close').addEventListener('click', ()=> document.getElementById('modal').style.display='none');
-    document.getElementById('cancelBtn').addEventListener('click', ()=> document.getElementById('modal').style.display='none');
-
-    // simple buy button: redirect to shop external if you want (optional)
-    document.querySelectorAll('.buy').forEach(b=>{
-      b.addEventListener('click', (e)=> {
-        // form submit handles payment flow
-      });
-    });
-  <script>
-  (function(){
-    const form = document.getElementById('orderForm');
-    if(!form) return;
-
-    form.addEventListener('submit', function(e){
-      // lakukan validasi manual singkat (hilangkan spasi kosong)
-      const requiredFields = ['name','phone','address','size','qty'];
-      for(const f of requiredFields){
-        const el = form.querySelector('[name="'+f+'"]');
-        if(!el || !el.value || !el.value.toString().trim()){
+  // FORM submit handler with validation + fallback redirect
+  if(orderForm){
+    orderForm.addEventListener('submit', function(e){
+      // validate required fields (name, phone, address, size, qty)
+      const required = ['name','phone','address','size','qty'];
+      for(const name of required){
+        const field = orderForm.querySelector('[name="'+name+'"]');
+        if(!field || !field.value || String(field.value).trim() === ''){
           e.preventDefault();
-          alert('Tolong isi semua kolom yang wajib.');
-          el && el.focus();
+          alert('Tolong isi semua kolom yang wajib (Nama, Nomor HP, Alamat, Size, Jumlah).');
+          if(field) field.focus();
           return false;
         }
       }
 
-      // submit normal, lalu set fallback redirect jika server lambat
-      // simpan url next untuk fallback
-      const nextUrl = form.querySelector('input[name="_next"]')?.value
-                    || 'https://phoenixborneoath.github.io/phoenixborne.oath/thankyou.html';
-
-      // allow normal form submission, but also set a safety timeout:
-      // jika setelah 3 detik page belum berubah, arahkan manual ke halaman thanks
+      // fallback: jika FormSubmit lambat/tidak redirect, paksa redirect ke _next setelah 3s
+      const nextEl = orderForm.querySelector('input[name="_next"]');
+      const nextUrl = nextEl ? nextEl.value : null;
       setTimeout(function(){
-        // jika masih di page yang sama (form belum redirect), paksa redirect
-        if (window.location.href.indexOf(nextUrl) === -1) {
+        if(nextUrl && window.location.href.indexOf(nextUrl) === -1){
           window.location.href = nextUrl;
         }
       }, 3000);
 
-      // biarkan form submit berjalan (tidak preventDefault) supaya FormSubmit tetap menerima data
+      // biarkan form submit berjalan secara normal (tidak preventDefault)
       return true;
     });
-  })();
+  }
+
+  // Safety: jika tombol tidak bereaksi, tampilkan hint di console
+  setTimeout(function(){
+    const buyCount = document.querySelectorAll('.buy-btn').length;
+    if(buyCount === 0){
+      console.warn('Tidak ada tombol .buy-btn ditemukan. Pastikan tombol produk memiliki class="buy-btn" dan attribute data-id.');
+    }
+  }, 600);
+
+});
 </script>
-</body>
-</html>
