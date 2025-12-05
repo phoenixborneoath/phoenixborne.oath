@@ -1,276 +1,400 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Phoenixborne Oath — Official Shop</title>
-
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
-
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Phoenixborne Oath — Shop (Black Metal)</title>
   <style>
-    :root{--bg:#050507;--card:#0b0b10;--silver:#d5d5d5;--muted:#9a9a9a;--accent:#f5f5f5;--glass:rgba(255,255,255,0.03);--radius:12px}
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,system-ui,-apple-system,sans-serif;background:radial-gradient(circle at top,#121217 0,var(--bg) 50%);color:var(--silver);padding:22px}
-    .wrap{max-width:1060px;margin:0 auto}
-    .top{display:flex;gap:18px;align-items:center;padding:18px;border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.6));border:1px solid rgba(255,255,255,0.06)}
-    .crest{width:72px;height:72px;border-radius:999px;overflow:hidden;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.12);background:radial-gradient(circle at top,rgba(255,255,255,0.03),rgba(0,0,0,0.6))}
-    .crest img{width:56px;height:56px;object-fit:contain;border-radius:50%}
-    .brand h1{font-family:Cinzel,serif;margin:0;font-size:20px;letter-spacing:0.14em;color:var(--accent)}
-    .brand p{margin:6px 0 0;color:var(--muted);font-size:13px}
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}
-    @media(max-width:920px){.grid{grid-template-columns:repeat(2,1fr)}}
-    @media(max-width:560px){.grid{grid-template-columns:1fr}}
-    .card{background:var(--card);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column;gap:10px}
-    .thumb{height:260px;border-radius:8px;overflow:hidden;background:#000;display:flex;align-items:center;justify-content:center}
-    .thumb img{width:100%;height:100%;object-fit:cover}
-    .title{font-family:Cinzel,serif;font-size:16px;margin:0;color:var(--accent)}
-    .meta{font-size:13px;color:var(--muted)}
-    .price{font-weight:700;color:var(--silver)}
-    .actions{display:flex;gap:8px;align-items:center;margin-top:8px}
-    .btn{padding:10px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--silver);cursor:pointer}
-    .buy{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.6));}
-    .info{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap}
-    .box{flex:1;min-width:220px;background:rgba(255,255,255,0.02);padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
-    .box h3{margin:0;font-family:Cinzel,serif}
+    :root{
+      --bg:#0b0b0b;
+      --panel:#0f0f10;
+      --silver1: #cfcfcf;
+      --silver2: #9ea0a3;
+      --accent: linear-gradient(90deg,#d9d9d9,#b7b7b7,#8f8f8f);
+      --danger:#b22222;
+      font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+    html,body{height:100%;margin:0;background:var(--bg);color:var(--silver1);}
+    .container{max-width:980px;margin:28px auto;padding:28px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);box-shadow:0 8px 30px rgba(0,0,0,0.7);border-radius:12px}
+    header{display:flex;gap:18px;align-items:center}
+    .logo{width:74px;height:74px;border-radius:8px;background:#050505;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,0.06)}
+    .brand{font-size:22px;letter-spacing:1px;font-weight:700;background:-webkit-linear-gradient(#e9e9e9,#9f9f9f);-webkit-background-clip:text;color:transparent}
+    .tag{font-size:12px;color:var(--silver2)}
+
+    .layout{display:grid;grid-template-columns:1fr 360px;gap:26px;margin-top:20px}
+    .card{background:var(--panel);padding:18px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+
+    /* product area */
+    .photo{height:420px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:repeating-linear-gradient(135deg, rgba(255,255,255,0.01) 0 1px, transparent 1px 30px);position:relative;overflow:hidden}
+    .photo img{max-width:100%;max-height:100%;object-fit:contain}
+    .upload-note{position:absolute;left:12px;bottom:12px;font-size:12px;color:var(--silver2)}
+
+    .meta{margin-top:14px}
+    .title{font-size:18px;font-weight:700}
+    .price{font-size:20px;margin-top:8px}
+
+    .btn{display:inline-block;padding:12px 18px;border-radius:10px;background:transparent;border:2px solid rgba(255,255,255,0.08);cursor:pointer;font-weight:700}
+    .btn-buy{background-image:var(--accent);color:#0b0b0b;border:none;padding:12px 22px}
+
     /* modal */
-    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:90;padding:18px}
-    .modal .inner{width:100%;max-width:760px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.6));border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.06)}
-    .row{display:flex;gap:14px;align-items:flex-start}
-    .row .img{width:320px;height:320px;border-radius:8px;overflow:hidden}
-    .row img{width:100%;height:100%;object-fit:cover}
-    .close{position:absolute;right:22px;top:18px;background:transparent;border:0;color:var(--silver);font-size:18px;cursor:pointer}
-    .form-row{display:flex;gap:8px}
-    .form-row .col{flex:1}
-    input[type="text"],input[type="tel"],select,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--silver);outline:none}
-    label{font-size:13px;color:var(--muted);display:block;margin-bottom:6px}
-    .small{font-size:13px;color:var(--muted)}
-    .bank{background:rgba(255,255,255,0.02);padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.03)}
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;z-index:40}
+    .modal{width:520px;background:#0d0d0d;padding:18px;border-radius:10px;border:1px solid rgba(255,255,255,0.04)}
+    .field{margin-bottom:10px}
+    label{display:block;font-size:13px;color:var(--silver2);margin-bottom:6px}
+    input[type=text], input[type=tel], textarea, select{width:100%;padding:10px;border-radius:8px;background:#0b0b0b;border:1px solid rgba(255,255,255,0.03);color:var(--silver1)}
+    textarea{min-height:80px}
+
+    .muted{font-size:12px;color:var(--silver2)}
+    footer.note{margin-top:14px;font-size:12px;color:var(--silver2)}
+
+    /* admin link */
+    .admin-link{font-size:13px;color:var(--silver2);text-decoration:underline;cursor:pointer}
+    table{width:100%;border-collapse:collapse;margin-top:8px}
+    th,td{padding:8px;border-bottom:1px solid rgba(255,255,255,0.03);font-size:13px;text-align:left}
+    .status-paid{color:#81c784;font-weight:700}
+    .status-unpaid{color:#ffa726;font-weight:700}
+
+    .small{font-size:12px;color:var(--silver2)}
+
+    .top-actions{display:flex;gap:8px;align-items:center}
+
+    @media(max-width:900px){.layout{grid-template-columns:1fr;}.photo{height:320px}}
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="top">
-      <div class="crest"><img src="phoenix.png" alt="logo"/></div>
-      <div class="brand">
-        <h1>PHOENIXBORNE <span style="opacity:.85">OATH</span></h1>
-        <p>Official Shop — merchandise & limited drops. Pilih produk, isi form, lalu transfer ke rekening.</p>
+  <div class="container">
+    <header>
+      <div class="logo"> <svg width="44" height="44" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2 L15 8 L22 9 L17 14 L18 21 L12 18 L6 21 L7 14 L2 9 L9 8 Z" stroke="white" stroke-opacity="0.9" stroke-width="0.8" fill="none"/></svg></div>
+      <div>
+        <div class="brand">Phoenixborne Oath</div>
+        <div class="tag">Black metal apparel — limited drops</div>
       </div>
-    </div>
+      <div style="margin-left:auto" class="top-actions">
+        <div class="small">Theme: <strong style="color:var(--silver1)">Black / Silver</strong></div>
+        <div style="margin-left:12px" class="admin-link" id="open-admin">Admin</div>
+      </div>
+    </header>
 
-    <!-- product grid -->
-    <div class="grid" id="grid">
-      <!-- product 1 -->
-      <div class="card" data-id="p1" data-title="Phoenixborn Sigil Tee" data-price="Rp 199.000" data-img="https://via.placeholder.com/1000x1000?text=Design+1">
-        <div class="thumb"><img src="https://via.placeholder.com/1000x1000?text=Design+1" alt=""></div>
-        <h3 class="title">Phoenixborn Sigil Tee</h3>
-        <div class="meta">Black / Cotton 220gsm</div>
-        <div class="price">Rp 199.000</div>
-        <div class="actions">
-          <button class="btn view" data-id="p1">View</button>
-          <button class="btn buy buy-btn" data-id="p1">Buy</button>
+    <main class="layout">
+      <section class="card">
+        <div class="photo" id="photoWrap">
+          <img id="brandPhoto" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600'><rect width='100%' height='100%' fill='%23080808'/><text x='50%' y='50%' fill='%23bfbfbf' font-size='28' font-family='Arial' text-anchor='middle' alignment-baseline='middle'>Upload foto brand Anda</text></svg>" alt="brand photo">
+          <div class="upload-note">Upload satu foto (klik tombol pilih di bawah)</div>
         </div>
-      </div>
 
-      <!-- product 2 -->
-      <div class="card" data-id="p2" data-title="Ashen Oath Tee (Limited)" data-price="Rp 249.000" data-img="https://via.placeholder.com/1000x1000?text=Design+2">
-        <div class="thumb"><img src="https://via.placeholder.com/1000x1000?text=Design+2" alt=""></div>
-        <h3 class="title">Ashen Oath Tee (Limited)</h3>
-        <div class="meta">White print / Black shirt</div>
-        <div class="price">Rp 249.000</div>
-        <div class="actions">
-          <button class="btn view" data-id="p2">View</button>
-          <button class="btn buy buy-btn" data-id="p2">Buy</button>
-        </div>
-      </div>
+        <div class="meta">
+          <div class="title">Limited Drop T-Shirt</div>
+          <div class="price">Rp 250.000</div>
 
-      <!-- product 3 -->
-      <div class="card" data-id="p3" data-title="Resurrection Hoodie" data-price="Rp 399.000" data-img="https://via.placeholder.com/1000x1000?text=Design+3">
-        <div class="thumb"><img src="https://via.placeholder.com/1000x1000?text=Design+3" alt=""></div>
-        <h3 class="title">Resurrection Hoodie</h3>
-        <div class="meta">Heavy fleece, limited run</div>
-        <div class="price">Rp 399.000</div>
-        <div class="actions">
-          <button class="btn view" data-id="p3">View</button>
-          <button class="btn buy buy-btn" data-id="p3">Buy</button>
-        </div>
-      </div>
-    </div>
+          <div style="margin-top:14px;display:flex;gap:8px;align-items:center">
+            <label class="btn" for="photoInput">Pilih Foto</label>
+            <input id="photoInput" type="file" accept="image/*" style="display:none" />
+            <button class="btn btn-buy" id="buyBtn">Beli Sekarang</button>
+          </div>
 
-    <!-- info -->
-    <div class="info" style="margin-top:22px">
-      <div class="box">
-        <h3>Pengiriman & Pengembalian</h3>
-        <p class="small">Pengiriman ke seluruh Indonesia. Estimasi 3–7 hari kerja. Pengembalian diterima dalam 7 hari jika produk rusak / tidak sesuai.</p>
-      </div>
-      <div class="box">
-        <h3>Pembayaran (Rekening)</h3>
-        <div class="bank">
-          <strong>Bank:</strong> <span id="bank-name">BANK BCA</span><br/>
-          <strong>Nomor Rekening:</strong> <span id="bank-no">0213670112</span><br/>
-          <strong>Atas Nama:</strong> <span id="bank-an">M RIDHO FATAHILLAH</span>
+          <div class="small" style="margin-top:10px">Stok terbatas. Ketentuan ukuran jangan diubah setelah checkout.</div>
         </div>
-      </div>
-      <div class="box">
-        <h3>Kontak</h3>
-        <p class="small">Email: <strong>scorched.oath@gmail.com</strong><br/>WA: <strong>+62-895-8096-79191</strong></p>
+      </section>
+
+      <aside class="card">
+        <h3 style="margin-top:0">Ringkasan Pesanan</h3>
+        <div style="display:flex;gap:12px;align-items:center">
+          <div style="width:80px;height:80px;background:#060606;border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden" id="miniPhotoWrap">
+            <img id="miniPhoto" src="" alt="mini" style="max-width:100%;max-height:100%;display:none" />
+            <div id="miniPlaceholder" style="color:var(--silver2);font-size:12px">Foto belum dipilih</div>
+          </div>
+          <div>
+            <div class="title">Limited Drop T-Shirt</div>
+            <div class="price">Rp <span id="displayPrice">250000</span></div>
+          </div>
+        </div>
+
+        <div style="margin-top:16px">
+          <div class="muted">Ukuran</div>
+          <select id="sizeSel" style="margin-top:8px">
+            <option value="S">S</option>
+            <option value="M" selected>M</option>
+            <option value="L">L</option>
+            <option value="XL">XL</option>
+          </select>
+        </div>
+
+        <div style="margin-top:12px">
+          <div class="muted">Qty</div>
+          <input type="number" id="qty" value="1" min="1" style="margin-top:8px;width:80px;padding:8px;border-radius:8px;background:#0b0b0b;border:1px solid rgba(255,255,255,0.03);color:var(--silver1)" />
+        </div>
+
+        <div style="margin-top:16px;display:flex;gap:8px">
+          <button class="btn" id="buyBtn2">Isi Data & Bayar</button>
+          <button class="btn" id="clearBtn">Reset</button>
+        </div>
+
+        <footer class="note">Catatan: ini contoh front-end. Untuk pembayaran real gunakan gateway (Midtrans / Xendit / Stripe) dan server-side webhook untuk verifikasi otomatis.</footer>
+      </aside>
+    </main>
+
+  </div>
+
+  <!-- modal checkout -->
+  <div class="modal-backdrop" id="modal">
+    <div class="modal" role="dialog" aria-modal="true">
+      <h3 style="margin-top:0">Formulir Pembeli</h3>
+      <div class="field"><label>Nama lengkap</label><input id="inpName" type="text" /></div>
+      <div class="field"><label>Alamat lengkap</label><textarea id="inpAddress"></textarea></div>
+      <div class="field"><label>Ukuran</label><select id="inpSize"><option>S</option><option>M</option><option>L</option><option>XL</option></select></div>
+      <div class="field"><label>Nomor telepon</label><input id="inpPhone" type="tel" /></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+        <button class="btn" id="cancel">Batal</button>
+        <button class="btn btn-buy" id="submitOrder">Lanjut ke Pembayaran</button>
       </div>
     </div>
   </div>
 
-  <!-- modal order -->
-  <div class="modal" id="modal">
-    <div class="inner" role="dialog" aria-modal="true">
-      <button class="close" id="close">✕</button>
-      <div class="row">
-        <div class="img"><img id="mimg" src="" alt=""></div>
-        <div style="flex:1">
-          <h2 id="mtitle" style="font-family:Cinzel,serif;margin-top:0;color:var(--accent)"></h2>
-          <div id="mprice" class="small" style="margin-bottom:12px"></div>
-
-          <!-- FORM: kirim ke FormSubmit (ganti EMAIL dengan emailmu) -->
-          <form action="https://formsubmit.co/scorched.oath@gmail.com" method="POST">
-            <!-- agar FormSubmit tidak menanyakan captcha -->
-            <input type="hidden" name="_captcha" value="false">
-            <!-- redirect ke halaman terima kasih -->
-            <input type="hidden" name="_next" value="https://phoenixborneoath.github.io/phoenixborne.oath/thankyou.html">
-            <input type="hidden" name="product_id" id="product_id" value="">
-            <input type="hidden" name="product_title" id="product_title" value="">
-            <input type="hidden" name="product_price" id="product_price" value="">
-
-            <label>Nama Penerima</label>
-            <input type="text" name="name" required placeholder="Nama lengkap" />
-
-            <label>Nomor HP (WA)</label>
-            <input type="tel" name="phone" required placeholder="+62..." />
-
-            <label>Alamat Lengkap</label>
-            <textarea name="address" rows="3" required placeholder="Jalan, Kota, Kode Pos..."></textarea>
-
-            <div class="form-row" style="margin-top:10px">
-              <div class="col">
-                <label>Size</label>
-                <select name="size" required>
-                  <option value="S">S</option>
-                  <option value="M" selected>M</option>
-                  <option value="L">L</option>
-                  <option value="XL">XL</option>
-                </select>
-              </div>
-              <div class="col">
-                <label>Jumlah</label>
-                <select name="qty" required>
-                  <option value="1" selected>1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                </select>
-              </div>
-            </div>
-
-            <div style="margin-top:12px;display:flex;gap:8px">
-              <button type="submit" class="btn buy" style="flex:1">Kirim Pesanan & Lihat Instruksi Bayar</button>
-              <button type="button" class="btn" id="cancelBtn">Batal</button>
-            </div>
-
-            <p class="small" style="margin-top:10px">Setelah mengirim pesanan, kamu akan diarahkan ke halaman instruksi pembayaran. Pesanan juga akan terkirim ke email kami.</p>
-          </form>
-        </div>
+  <!-- admin modal -->
+  <div class="modal-backdrop" id="adminModal">
+    <div class="modal" style="width:880px;max-width:96%" role="dialog" aria-modal="true">
+      <h3 style="margin-top:0">Admin - Lihat Pesanan</h3>
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px">
+        <label class="small">Passcode:</label>
+        <input id="adminPass" type="text" style="width:200px;padding:8px;border-radius:6px;background:#0b0b0b;border:1px solid rgba(255,255,255,0.03);color:var(--silver1)" />
+        <button class="btn" id="unlockAdmin">Buka</button>
+        <button class="btn" id="exportCsv">Export CSV</button>
+      </div>
+      <div id="adminContent" style="max-height:520px;overflow:auto;display:none">
+        <table>
+          <thead><tr><th>ID</th><th>Nama</th><th>Alamat</th><th>Ukuran</th><th>Qty</th><th>HP</th><th>Total</th><th>Status</th><th>Aksi</th></tr></thead>
+          <tbody id="ordersTable"></tbody>
+        </table>
+        <div class="small" style="margin-top:10px">Untuk verifikasi transfer: cek bukti transfer yang dikirim pembeli (atau cocokkan rekening & nominal), lalu klik 'Tandai Lunas'.</div>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+        <button class="btn" id="closeAdmin">Tutup</button>
       </div>
     </div>
   </div>
 
   <script>
-document.addEventListener('DOMContentLoaded', function(){
-  // Element references
-  const modal = document.getElementById('modal');
-  const mimg = document.getElementById('mimg');
-  const mtitle = document.getElementById('mtitle');
-  const mprice = document.getElementById('mprice');
-  const productIdInput = document.getElementById('product_id');
-  const productTitleInput = document.getElementById('product_title');
-  const productPriceInput = document.getElementById('product_price');
-  const orderForm = document.getElementById('orderForm');
-  const closeBtn = document.getElementById('close');
-  const cancelBtn = document.getElementById('cancelBtn');
+    // --- Utilities / simple SPA logic ---
+    const photoInput = document.getElementById('photoInput');
+    const brandPhoto = document.getElementById('brandPhoto');
+    const miniPhoto = document.getElementById('miniPhoto');
+    const miniPlaceholder = document.getElementById('miniPlaceholder');
+    const photoWrap = document.getElementById('photoWrap');
 
-  // Safety: jika elemen tidak ditemukan, abort with console message
-  if(!orderForm){
-    console.warn('Order form tidak ditemukan (id="orderForm"). Pastikan form ada di halaman.');
-  }
-
-  // Fungsi buka modal berdasarkan id produk
-  function openModal(id){
-    const card = document.querySelector('[data-id="'+id+'"]');
-    if(!card) { console.warn('Card tidak ditemukan untuk id', id); return; }
-    const title = card.dataset.title || '';
-    const price = card.dataset.price || '';
-    const img = card.dataset.img || '';
-    if(mimg) mimg.src = img;
-    if(mtitle) mtitle.textContent = title;
-    if(mprice) mprice.textContent = price;
-    if(productIdInput) productIdInput.value = id;
-    if(productTitleInput) productTitleInput.value = title;
-    if(productPriceInput) productPriceInput.value = price;
-    if(modal) modal.style.display = 'flex';
-    // scroll to top of modal on small screens
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  // Event delegation untuk tombol buy / view
-  document.body.addEventListener('click', function(e){
-    const el = e.target.closest && e.target.closest('.buy-btn, .view');
-    if(!el) return;
-    const id = el.dataset.id;
-    if(!id) return;
-    e.preventDefault();
-    openModal(id);
-  });
-
-  // close handlers
-  if(closeBtn) closeBtn.addEventListener('click', ()=> modal.style.display='none');
-  if(cancelBtn) cancelBtn.addEventListener('click', ()=> modal.style.display='none');
-  // close when click outside inner
-  if(modal){
-    modal.addEventListener('click', function(ev){
-      if(ev.target === modal) modal.style.display = 'none';
+    photoInput.addEventListener('change', async (e)=>{
+      const file = e.target.files[0];
+      if(!file) return;
+      const url = await fileToDataURL(file);
+      brandPhoto.src = url;
+      miniPhoto.src = url; miniPhoto.style.display='block'; miniPlaceholder.style.display='none';
     });
-  }
 
-  // FORM submit handler with validation + fallback redirect
-  if(orderForm){
-    orderForm.addEventListener('submit', function(e){
-      // validate required fields (name, phone, address, size, qty)
-      const required = ['name','phone','address','size','qty'];
-      for(const name of required){
-        const field = orderForm.querySelector('[name="'+name+'"]');
-        if(!field || !field.value || String(field.value).trim() === ''){
-          e.preventDefault();
-          alert('Tolong isi semua kolom yang wajib (Nama, Nomor HP, Alamat, Size, Jumlah).');
-          if(field) field.focus();
-          return false;
-        }
+    function fileToDataURL(file){
+      return new Promise((res,rej)=>{
+        const r = new FileReader(); r.onload = ()=>res(r.result); r.onerror=rej; r.readAsDataURL(file);
+      })
+    }
+
+    // open modal
+    const modal = document.getElementById('modal');
+    const buyBtn = document.getElementById('buyBtn');
+    const buyBtn2 = document.getElementById('buyBtn2');
+    const cancel = document.getElementById('cancel');
+    buyBtn.addEventListener('click',()=>openCheckout());
+    buyBtn2.addEventListener('click',()=>openCheckout());
+    cancel.addEventListener('click',()=>closeCheckout());
+
+    function openCheckout(){ modal.style.display='flex'; }
+    function closeCheckout(){ modal.style.display='none'; }
+
+    // submit order -> save to localStorage and redirect to payment view
+    document.getElementById('submitOrder').addEventListener('click', async ()=>{
+      const name = document.getElementById('inpName').value.trim();
+      const address = document.getElementById('inpAddress').value.trim();
+      const size = document.getElementById('inpSize').value;
+      const phone = document.getElementById('inpPhone').value.trim();
+      const qty = parseInt(document.getElementById('qty').value)||1;
+
+      if(!name || !address || !phone){
+        alert('Lengkapi nama, alamat, dan nomor telepon.');
+        return;
       }
 
-      // fallback: jika FormSubmit lambat/tidak redirect, paksa redirect ke _next setelah 3s
-      const nextEl = orderForm.querySelector('input[name="_next"]');
-      const nextUrl = nextEl ? nextEl.value : null;
-      setTimeout(function(){
-        if(nextUrl && window.location.href.indexOf(nextUrl) === -1){
-          window.location.href = nextUrl;
-        }
-      }, 3000);
+      // collect photo as base64
+      let photoData = brandPhoto.src || '';
+      const id = 'ORD' + Date.now();
+      const priceEach = parseInt(document.getElementById('displayPrice').innerText) || 250000;
+      const total = priceEach * qty;
 
-      // biarkan form submit berjalan secara normal (tidak preventDefault)
-      return true;
+      const order = { id, name, address, size, phone, qty, total, photo: photoData, status:'pending', createdAt: new Date().toISOString() };
+      saveOrder(order);
+      closeCheckout();
+
+      // redirect to simulated payment page (single file SPA)
+      openPayment(order.id);
     });
-  }
 
-  // Safety: jika tombol tidak bereaksi, tampilkan hint di console
-  setTimeout(function(){
-    const buyCount = document.querySelectorAll('.buy-btn').length;
-    if(buyCount === 0){
-      console.warn('Tidak ada tombol .buy-btn ditemukan. Pastikan tombol produk memiliki class="buy-btn" dan attribute data-id.');
+    function saveOrder(order){
+      const list = JSON.parse(localStorage.getItem('orders_v1')||'[]');
+      list.push(order);
+      localStorage.setItem('orders_v1',JSON.stringify(list));
     }
-  }, 600);
 
-});
-</script>
+    // simulated payment page
+    function openPayment(orderId){
+      const container = document.querySelector('.container');
+      container.innerHTML = `
+        <div style="padding:28px;color:var(--silver1)">
+          <h2>Pembayaran untuk ${orderId}</h2>
+          <p class="small">Silakan lakukan pembayaran sejumlah <strong>Rp <span id=payAmount></span></strong> ke rekening: <br><strong>BNI 123-456-789 a.n Phoenixborne Oath</strong></p>
+          <p class="small">Setelah transfer, unggah bukti transfer di bawah atau catat nomor transaksi, lalu klik Konfirmasi.</p>
+
+          <div style="background:var(--panel);padding:16px;border-radius:8px;margin-top:12px">
+            <div class="field"><label>Nomor Transaksi / Catatan</label><input id="trxId" type="text" /></div>
+            <div class="field"><label>Unggah bukti transfer (opsional)</label><input id="proof" type="file" accept="image/*" /></div>
+            <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button class="btn" id="backShop">Kembali</button><button class="btn btn-buy" id="confirmPay">Konfirmasi Pembayaran</button></div>
+          </div>
+
+          <div style="margin-top:18px" class="small">Catatan: ini demo front-end. Untuk verifikasi otomatis gunakan webhook dari gateway.</div>
+        </div>
+      `;
+
+      // fill amount
+      const order = getOrder(orderId);
+      document.getElementById('payAmount').innerText = order.total;
+
+      document.getElementById('backShop').addEventListener('click',()=>location.reload());
+
+      document.getElementById('confirmPay').addEventListener('click', async ()=>{
+        const trx = document.getElementById('trxId').value.trim();
+        const proofFile = document.getElementById('proof').files[0];
+        let proofData = '';
+        if(proofFile){ proofData = await fileToDataURL(proofFile); }
+        markOrderPaid(orderId, trx, proofData);
+        // show thanks
+        container.innerHTML = `<div style="padding:28px;color:var(--silver1)"><h2>Terima kasih! Pesanan Anda (${orderId}) tercatat.</h2><p class="small">Kami akan memverifikasi pembayaran Anda. Anda dapat menutup halaman ini.</p></div>`;
+      });
+    }
+
+    function getOrder(id){
+      const list = JSON.parse(localStorage.getItem('orders_v1')||'[]');
+      return list.find(o=>o.id===id);
+    }
+
+    function markOrderPaid(id, trx, proofData){
+      const list = JSON.parse(localStorage.getItem('orders_v1')||'[]');
+      const idx = list.findIndex(o=>o.id===id);
+      if(idx===-1) return;
+      list[idx].status = 'paid';
+      list[idx].trx = trx || '';
+      list[idx].proof = proofData || '';
+      list[idx].paidAt = new Date().toISOString();
+      localStorage.setItem('orders_v1',JSON.stringify(list));
+    }
+
+    // admin
+    const openAdmin = document.getElementById('open-admin');
+    const adminModal = document.getElementById('adminModal');
+    const closeAdmin = document.getElementById('closeAdmin');
+    const unlockBtn = document.getElementById('unlockAdmin');
+    const adminContent = document.getElementById('adminContent');
+    const ordersTable = document.getElementById('ordersTable');
+    const exportCsvBtn = document.getElementById('exportCsv');
+
+    openAdmin.addEventListener('click',()=>{ adminModal.style.display='flex'; });
+    closeAdmin.addEventListener('click',()=>{ adminModal.style.display='none'; adminContent.style.display='none' });
+
+    unlockBtn.addEventListener('click',()=>{
+      const pass = document.getElementById('adminPass').value.trim();
+      // default passcode: admin123  -> change in production
+      if(pass!== 'admin123'){
+        alert('Passcode salah. (default demo: admin123)'); return;
+      }
+      adminContent.style.display='block';
+      renderOrders();
+    });
+
+    function renderOrders(){
+      const list = JSON.parse(localStorage.getItem('orders_v1')||'[]');
+      ordersTable.innerHTML='';
+      if(!list.length){ ordersTable.innerHTML = '<tr><td colspan="9" class="small">Belum ada pesanan.</td></tr>'; return; }
+      list.slice().reverse().forEach(o=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${o.id}</td>
+          <td>${escapeHtml(o.name)}</td>
+          <td style="max-width:200px">${escapeHtml(o.address)}</td>
+          <td>${o.size}</td>
+          <td>${o.qty}</td>
+          <td>${escapeHtml(o.phone)}</td>
+          <td>Rp ${o.total}</td>
+          <td class="${o.status==='paid'?'status-paid':'status-unpaid'}">${o.status}</td>
+          <td>
+            ${o.status!=='paid'?`<button class='btn' data-id='${o.id}' data-action='markPaid'>Tandai Lunas</button>`:''}
+            <button class='btn' data-id='${o.id}' data-action='view'>Lihat</button>
+          </td>
+        `;
+        ordersTable.appendChild(tr);
+      });
+
+      // delegate actions
+      ordersTable.querySelectorAll('button').forEach(b=>b.addEventListener('click',(e)=>{
+        const id = e.currentTarget.dataset.id; const action = e.currentTarget.dataset.action;
+        if(action==='markPaid'){
+          if(confirm('Tandai pesanan ini sebagai LUNAS?')){ markOrderPaid(id,'manual-admin',''); renderOrders(); }
+        } else if(action==='view'){
+          const o = getOrder(id);
+          showOrderDetail(o);
+        }
+      }));
+    }
+
+    function showOrderDetail(o){
+      const html = `
+        <div style="padding:12px;background:#060606;border-radius:8px;margin-top:10px">
+          <div><strong>ID:</strong> ${o.id}</div>
+          <div><strong>Nama:</strong> ${escapeHtml(o.name)}</div>
+          <div><strong>Alamat:</strong> ${escapeHtml(o.address)}</div>
+          <div><strong>HP:</strong> ${escapeHtml(o.phone)}</div>
+          <div><strong>Status:</strong> ${o.status}</div>
+          <div style="margin-top:8px">${o.proof?`<div><strong>Bukti:</strong><br><img src='${o.proof}' style='max-width:260px;border-radius:6px;margin-top:8px' /></div>`:''}</div>
+          <div style="margin-top:8px"><button class='btn' id='markPaidNow'>Tandai Lunas</button></div>
+        </div>
+      `;
+      const wrapper = document.createElement('div'); wrapper.innerHTML = html;
+      adminContent.appendChild(wrapper);
+      wrapper.querySelector('#markPaidNow').addEventListener('click',()=>{ if(confirm('Tandai lunas?')){ markOrderPaid(o.id,'admin-confirm',''); renderOrders(); wrapper.remove(); }});
+    }
+
+    exportCsvBtn.addEventListener('click',()=>{
+      const list = JSON.parse(localStorage.getItem('orders_v1')||'[]');
+      if(!list.length){ alert('Tidak ada data'); return; }
+      const rows = ['id,name,address,phone,size,qty,total,status,createdAt'];
+      list.forEach(o=>rows.push([o.id,escapeCsv(o.name),escapeCsv(o.address),o.phone,o.size,o.qty,o.total,o.status,o.createdAt].join(',')));
+      const blob = new Blob([rows.join('\n')],{type:'text/csv'});
+      const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download='orders.csv'; a.click(); URL.revokeObjectURL(url);
+    });
+
+    function escapeHtml(s){ return (s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+    function escapeCsv(s){ return '"'+(s||'').replaceAll('"','""')+'"'; }
+
+    // clear / reset demo
+    document.getElementById('clearBtn').addEventListener('click',()=>{ if(confirm('Reset demo (hapus foto mini & qty)?')){ localStorage.removeItem('orders_v1'); miniPhoto.style.display='none'; miniPlaceholder.style.display='block'; location.reload(); }});
+
+    // small UX: show mini photo if exists
+    window.addEventListener('load',()=>{
+      const p = brandPhoto.src; if(p && !p.includes('Upload foto brand')){ miniPhoto.src=p; miniPhoto.style.display='block'; miniPlaceholder.style.display='none'; }
+    });
+
+    // helpers
+    function markOrderPaid(id,trx,proofData){
+      const list = JSON.parse(localStorage.getItem('orders_v1')||'[]');
+      const idx = list.findIndex(o=>o.id===id);
+      if(idx===-1) return;
+      list[idx].status='paid'; list[idx].trx = trx; if(proofData) list[idx].proof=proofData; list[idx].paidAt=new Date().toISOString();
+      localStorage.setItem('orders_v1',JSON.stringify(list));
+    }
+
+  </script>
+</body>
+</html>
