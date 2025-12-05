@@ -78,8 +78,8 @@
     <main class="layout">
       <section class="card">
         <div class="photo" id="photoWrap">
-          <img id="brandPhoto" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600'><rect width='100%' height='100%' fill='%23080808'/><text x='50%' y='50%' fill='%23bfbfbf' font-size='28' font-family='Arial' text-anchor='middle' alignment-baseline='middle'>Upload foto brand Anda</text></svg>" alt="brand photo">
-          <div class="upload-note">Upload satu foto (klik tombol pilih di bawah)</div>
+          <img id="brandPhoto" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600'><rect width='100%' height='100%' fill='%23080808'/><text x='50%' y='50%' fill='%23bfbfbf' font-size='28' font-family='Arial' text-anchor='middle' alignment-baseline='middle'>Foto brand akan diunggah oleh penjual</text></svg>" alt="brand photo">
+          <div class="upload-note">Foto dikelola oleh penjual — tidak ada pilihan upload untuk pembeli</div>
         </div>
 
         <div class="meta">
@@ -87,8 +87,7 @@
           <div class="price">Rp 250.000</div>
 
           <div style="margin-top:14px;display:flex;gap:8px;align-items:center">
-            <label class="btn" for="photoInput">Pilih Foto</label>
-            <input id="photoInput" type="file" accept="image/*" style="display:none" />
+            <div class="small">Gambar produk hanya dapat diubah oleh penjual melalui panel Admin.</div>
             <button class="btn btn-buy" id="buyBtn">Beli Sekarang</button>
           </div>
 
@@ -101,7 +100,7 @@
         <div style="display:flex;gap:12px;align-items:center">
           <div style="width:80px;height:80px;background:#060606;border-radius:8px;display:flex;align-items:center;justify-content:center;overflow:hidden" id="miniPhotoWrap">
             <img id="miniPhoto" src="" alt="mini" style="max-width:100%;max-height:100%;display:none" />
-            <div id="miniPlaceholder" style="color:var(--silver2);font-size:12px">Foto belum dipilih</div>
+            <div id="miniPlaceholder" style="color:var(--silver2);font-size:12px">Foto belum tersedia</div>
           </div>
           <div>
             <div class="title">Limited Drop T-Shirt</div>
@@ -160,6 +159,15 @@
         <button class="btn" id="unlockAdmin">Buka</button>
         <button class="btn" id="exportCsv">Export CSV</button>
       </div>
+
+      <!-- Seller-only: upload brand photo -->
+      <div style="margin-bottom:12px;display:flex;gap:8px;align-items:center">
+        <label class="small">Unggah Foto Brand (hanya penjual):</label>
+        <input id="adminPhotoInput" type="file" accept="image/*" />
+        <button class="btn" id="saveBrandPhoto">Simpan Foto</button>
+        <div class="small">Foto akan tampil di halaman produk setelah tersimpan.</div>
+      </div>
+
       <div id="adminContent" style="max-height:520px;overflow:auto;display:none">
         <table>
           <thead><tr><th>ID</th><th>Nama</th><th>Alamat</th><th>Ukuran</th><th>Qty</th><th>HP</th><th>Total</th><th>Status</th><th>Aksi</th></tr></thead>
@@ -175,25 +183,10 @@
 
   <script>
     // --- Utilities / simple SPA logic ---
-    const photoInput = document.getElementById('photoInput');
     const brandPhoto = document.getElementById('brandPhoto');
     const miniPhoto = document.getElementById('miniPhoto');
     const miniPlaceholder = document.getElementById('miniPlaceholder');
     const photoWrap = document.getElementById('photoWrap');
-
-    photoInput.addEventListener('change', async (e)=>{
-      const file = e.target.files[0];
-      if(!file) return;
-      const url = await fileToDataURL(file);
-      brandPhoto.src = url;
-      miniPhoto.src = url; miniPhoto.style.display='block'; miniPlaceholder.style.display='none';
-    });
-
-    function fileToDataURL(file){
-      return new Promise((res,rej)=>{
-        const r = new FileReader(); r.onload = ()=>res(r.result); r.onerror=rej; r.readAsDataURL(file);
-      })
-    }
 
     // open modal
     const modal = document.getElementById('modal');
@@ -220,8 +213,8 @@
         return;
       }
 
-      // collect photo as base64
-      let photoData = brandPhoto.src || '';
+      // collect photo as base64 (from seller-uploaded brand photo if exists)
+      let photoData = localStorage.getItem('brand_photo_v1') || brandPhoto.src || '';
       const id = 'ORD' + Date.now();
       const priceEach = parseInt(document.getElementById('displayPrice').innerText) || 250000;
       const total = priceEach * qty;
@@ -241,160 +234,4 @@
     }
 
     // simulated payment page
-    function openPayment(orderId){
-      const container = document.querySelector('.container');
-      container.innerHTML = `
-        <div style="padding:28px;color:var(--silver1)">
-          <h2>Pembayaran untuk ${orderId}</h2>
-          <p class="small">Silakan lakukan pembayaran sejumlah <strong>Rp <span id=payAmount></span></strong> ke rekening: <br><strong>BNI 123-456-789 a.n Phoenixborne Oath</strong></p>
-          <p class="small">Setelah transfer, unggah bukti transfer di bawah atau catat nomor transaksi, lalu klik Konfirmasi.</p>
-
-          <div style="background:var(--panel);padding:16px;border-radius:8px;margin-top:12px">
-            <div class="field"><label>Nomor Transaksi / Catatan</label><input id="trxId" type="text" /></div>
-            <div class="field"><label>Unggah bukti transfer (opsional)</label><input id="proof" type="file" accept="image/*" /></div>
-            <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button class="btn" id="backShop">Kembali</button><button class="btn btn-buy" id="confirmPay">Konfirmasi Pembayaran</button></div>
-          </div>
-
-          <div style="margin-top:18px" class="small">Catatan: ini demo front-end. Untuk verifikasi otomatis gunakan webhook dari gateway.</div>
-        </div>
-      `;
-
-      // fill amount
-      const order = getOrder(orderId);
-      document.getElementById('payAmount').innerText = order.total;
-
-      document.getElementById('backShop').addEventListener('click',()=>location.reload());
-
-      document.getElementById('confirmPay').addEventListener('click', async ()=>{
-        const trx = document.getElementById('trxId').value.trim();
-        const proofFile = document.getElementById('proof').files[0];
-        let proofData = '';
-        if(proofFile){ proofData = await fileToDataURL(proofFile); }
-        markOrderPaid(orderId, trx, proofData);
-        // show thanks
-        container.innerHTML = `<div style="padding:28px;color:var(--silver1)"><h2>Terima kasih! Pesanan Anda (${orderId}) tercatat.</h2><p class="small">Kami akan memverifikasi pembayaran Anda. Anda dapat menutup halaman ini.</p></div>`;
-      });
-    }
-
-    function getOrder(id){
-      const list = JSON.parse(localStorage.getItem('orders_v1')||'[]');
-      return list.find(o=>o.id===id);
-    }
-
-    function markOrderPaid(id, trx, proofData){
-      const list = JSON.parse(localStorage.getItem('orders_v1')||'[]');
-      const idx = list.findIndex(o=>o.id===id);
-      if(idx===-1) return;
-      list[idx].status = 'paid';
-      list[idx].trx = trx || '';
-      list[idx].proof = proofData || '';
-      list[idx].paidAt = new Date().toISOString();
-      localStorage.setItem('orders_v1',JSON.stringify(list));
-    }
-
-    // admin
-    const openAdmin = document.getElementById('open-admin');
-    const adminModal = document.getElementById('adminModal');
-    const closeAdmin = document.getElementById('closeAdmin');
-    const unlockBtn = document.getElementById('unlockAdmin');
-    const adminContent = document.getElementById('adminContent');
-    const ordersTable = document.getElementById('ordersTable');
-    const exportCsvBtn = document.getElementById('exportCsv');
-
-    openAdmin.addEventListener('click',()=>{ adminModal.style.display='flex'; });
-    closeAdmin.addEventListener('click',()=>{ adminModal.style.display='none'; adminContent.style.display='none' });
-
-    unlockBtn.addEventListener('click',()=>{
-      const pass = document.getElementById('adminPass').value.trim();
-      // default passcode: admin123  -> change in production
-      if(pass!== 'admin123'){
-        alert('Passcode salah. (default demo: admin123)'); return;
-      }
-      adminContent.style.display='block';
-      renderOrders();
-    });
-
-    function renderOrders(){
-      const list = JSON.parse(localStorage.getItem('orders_v1')||'[]');
-      ordersTable.innerHTML='';
-      if(!list.length){ ordersTable.innerHTML = '<tr><td colspan="9" class="small">Belum ada pesanan.</td></tr>'; return; }
-      list.slice().reverse().forEach(o=>{
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${o.id}</td>
-          <td>${escapeHtml(o.name)}</td>
-          <td style="max-width:200px">${escapeHtml(o.address)}</td>
-          <td>${o.size}</td>
-          <td>${o.qty}</td>
-          <td>${escapeHtml(o.phone)}</td>
-          <td>Rp ${o.total}</td>
-          <td class="${o.status==='paid'?'status-paid':'status-unpaid'}">${o.status}</td>
-          <td>
-            ${o.status!=='paid'?`<button class='btn' data-id='${o.id}' data-action='markPaid'>Tandai Lunas</button>`:''}
-            <button class='btn' data-id='${o.id}' data-action='view'>Lihat</button>
-          </td>
-        `;
-        ordersTable.appendChild(tr);
-      });
-
-      // delegate actions
-      ordersTable.querySelectorAll('button').forEach(b=>b.addEventListener('click',(e)=>{
-        const id = e.currentTarget.dataset.id; const action = e.currentTarget.dataset.action;
-        if(action==='markPaid'){
-          if(confirm('Tandai pesanan ini sebagai LUNAS?')){ markOrderPaid(id,'manual-admin',''); renderOrders(); }
-        } else if(action==='view'){
-          const o = getOrder(id);
-          showOrderDetail(o);
-        }
-      }));
-    }
-
-    function showOrderDetail(o){
-      const html = `
-        <div style="padding:12px;background:#060606;border-radius:8px;margin-top:10px">
-          <div><strong>ID:</strong> ${o.id}</div>
-          <div><strong>Nama:</strong> ${escapeHtml(o.name)}</div>
-          <div><strong>Alamat:</strong> ${escapeHtml(o.address)}</div>
-          <div><strong>HP:</strong> ${escapeHtml(o.phone)}</div>
-          <div><strong>Status:</strong> ${o.status}</div>
-          <div style="margin-top:8px">${o.proof?`<div><strong>Bukti:</strong><br><img src='${o.proof}' style='max-width:260px;border-radius:6px;margin-top:8px' /></div>`:''}</div>
-          <div style="margin-top:8px"><button class='btn' id='markPaidNow'>Tandai Lunas</button></div>
-        </div>
-      `;
-      const wrapper = document.createElement('div'); wrapper.innerHTML = html;
-      adminContent.appendChild(wrapper);
-      wrapper.querySelector('#markPaidNow').addEventListener('click',()=>{ if(confirm('Tandai lunas?')){ markOrderPaid(o.id,'admin-confirm',''); renderOrders(); wrapper.remove(); }});
-    }
-
-    exportCsvBtn.addEventListener('click',()=>{
-      const list = JSON.parse(localStorage.getItem('orders_v1')||'[]');
-      if(!list.length){ alert('Tidak ada data'); return; }
-      const rows = ['id,name,address,phone,size,qty,total,status,createdAt'];
-      list.forEach(o=>rows.push([o.id,escapeCsv(o.name),escapeCsv(o.address),o.phone,o.size,o.qty,o.total,o.status,o.createdAt].join(',')));
-      const blob = new Blob([rows.join('\n')],{type:'text/csv'});
-      const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download='orders.csv'; a.click(); URL.revokeObjectURL(url);
-    });
-
-    function escapeHtml(s){ return (s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
-    function escapeCsv(s){ return '"'+(s||'').replaceAll('"','""')+'"'; }
-
-    // clear / reset demo
-    document.getElementById('clearBtn').addEventListener('click',()=>{ if(confirm('Reset demo (hapus foto mini & qty)?')){ localStorage.removeItem('orders_v1'); miniPhoto.style.display='none'; miniPlaceholder.style.display='block'; location.reload(); }});
-
-    // small UX: show mini photo if exists
-    window.addEventListener('load',()=>{
-      const p = brandPhoto.src; if(p && !p.includes('Upload foto brand')){ miniPhoto.src=p; miniPhoto.style.display='block'; miniPlaceholder.style.display='none'; }
-    });
-
-    // helpers
-    function markOrderPaid(id,trx,proofData){
-      const list = JSON.parse(localStorage.getItem('orders_v1')||'[]');
-      const idx = list.findIndex(o=>o.id===id);
-      if(idx===-1) return;
-      list[idx].status='paid'; list[idx].trx = trx; if(proofData) list[idx].proof=proofData; list[idx].paidAt=new Date().toISOString();
-      localStorage.setItem('orders_v1',JSON.stringify(list));
-    }
-
-  </script>
-</body>
-</html>
+    function openPayment(orderI
