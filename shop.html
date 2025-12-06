@@ -433,28 +433,62 @@ Pastikan akun owner dibuat di Firebase Console (Authentication > Users)');
   </div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* Debug helper: akan tunjukkan data / error di bawah gambar */
 const supabaseUrl = "https://cbbcmvgyascgzfquyrni.supabase.co";
-const supabaseKey = "sb_publishable_Ja1DPAjTxp3H3H3VB-fpl9cA_BiuIoXO6";
+const supabaseKey = "sb_publishable_Ja1DPAjTxp3H3VB-fpl9cA_BiuIoXO6";
 const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-// ambil URL gambar brand dari table config
-async function loadBrandImage() {
-  const { data, error } = await supabase
-    .from("config")
-    .select("imageUrl")
-    .eq("id", "brand")
-    .single();
-
-  if (error) {
-    console.error("Gagal memuat gambar brand:", error);
-    return;
+async function loadBrandImage_debug() {
+  let dbg = document.getElementById('debugArea');
+  if(!dbg){
+    dbg = document.createElement('pre');
+    dbg.id = 'debugArea';
+    dbg.style.background = 'rgba(255,255,255,0.03)';
+    dbg.style.color = '#ddd';
+    dbg.style.padding = '12px';
+    dbg.style.borderRadius = '8px';
+    dbg.style.margin = '12px';
+    dbg.style.fontSize = '13px';
+    const photoWrap = document.getElementById('photoWrap') || document.body;
+    photoWrap.insertAdjacentElement('afterend', dbg);
   }
+  dbg.innerText = 'Loading...';
 
-  const img = document.getElementById("brandPhoto");
-  if (img) img.src = data.imageUrl;
+  try {
+    const res = await supabase
+      .from('config')
+      .select('imageUrl')
+      .eq('id','brand')
+      .single();
+
+    dbg.innerText = JSON.stringify(res, null, 2);
+
+    if (res.error) {
+      dbg.innerText = 'Query returned error:\\n' + JSON.stringify(res.error, null, 2);
+      return;
+    }
+    if (!res.data || !res.data.imageUrl) {
+      dbg.innerText = 'No data.imageUrl found. Hasil query:\\n' + JSON.stringify(res, null, 2);
+      return;
+    }
+
+    const url = res.data.imageUrl;
+    const img = document.getElementById('brandPhoto');
+    if(img) img.src = url;
+
+    const testImg = new Image();
+    testImg.onload = () => { dbg.appendChild(document.createTextNode('\\nImage loaded ✓')); };
+    testImg.onerror = () => { dbg.appendChild(document.createTextNode('\\nGambar gagal dimuat ✗ (403/404)')); };
+    testImg.src = url;
+
+  } catch (err) {
+    dbg.innerText = 'Fetch error: ' + String(err);
+  }
 }
 
-loadBrandImage();
+loadBrandImage_debug();
 </script>
 </body>
 </html>
