@@ -419,76 +419,40 @@ Pastikan akun owner dibuat di Firebase Console (Authentication > Users)');
     }); // end DOMContentLoaded
   </script>
 
-  <!-- Instructions -->
-  <div style="position:fixed;right:12px;bottom:12px;z-index:9999;background:#0b0b0b;border:1px solid rgba(255,255,255,0.04);padding:10px;border-radius:8px;font-size:12px;color:var(--silver2)">
-    <strong>Petunjuk singkat:</strong>
-    <ol style="padding-left:18px;margin:6px 0">
-      <li>Buat project di Firebase console.</li>
-      <li>Aktifkan: Authentication (Email/Password), Firestore (native mode), Storage.</li>
-      <li>Ganti variabel <code>firebaseConfig</code> di atas dengan kredensial project Anda.</li>
-      <li>Tambahkan user Owner di Firebase Console → Authentication → Add user (masukkan email & password owner).</li>
-      <li>Hosting: upload file ini ke hosting (Firebase Hosting / Netlify / Vercel) agar semua pengunjung melihat foto yang tersimpan di Storage.</li>
-    </ol>
-    <div style="margin-top:6px;color:var(--silver1)">Butuh saya bantu pasang Firebase (saya bisa kirim langkah-langkah lengkap atau kode yang disesuaikan).</div>
-  </div>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-/* Debug helper: akan tunjukkan data / error di bawah gambar */
-const supabaseUrl = "https://cbbcmvgyascgzfquyrni.supabase.co";
-const supabaseKey = "sb_publishable_Ja1DPAjTxp3H3VB-fpl9cA_BiuIoXO6";
-const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+  // KONFIG SUPABASE
+  const supabaseUrl = "https://cbbcmvgyascgzfquyrni.supabase.co";
+  const supabaseKey = "sb_publishable_Ja1DPAjTxp3H3VB-fpl9cA_BiuIoXO6";
+  const sb = supabase.createClient(supabaseUrl, supabaseKey);
 
-async function loadBrandImage_debug() {
-  let dbg = document.getElementById('debugArea');
-  if(!dbg){
-    dbg = document.createElement('pre');
-    dbg.id = 'debugArea';
-    dbg.style.background = 'rgba(255,255,255,0.03)';
-    dbg.style.color = '#ddd';
-    dbg.style.padding = '12px';
-    dbg.style.borderRadius = '8px';
-    dbg.style.margin = '12px';
-    dbg.style.fontSize = '13px';
-    const photoWrap = document.getElementById('photoWrap') || document.body;
-    photoWrap.insertAdjacentElement('afterend', dbg);
-  }
-  dbg.innerText = 'Loading...';
+  async function loadBrandImage() {
+    try {
+      const { data, error } = await sb
+        .from("config")
+        .select("imageurl")
+        .eq("id", "brand")
+        .single();
 
-  try {
-    const res = await supabase
-      .from('config')
-      .select('imageurl')
-      .eq('id','brand')
-      .single();
+      if (error) {
+        console.error("Supabase error:", error);
+        return;
+      }
+      if (!data || !data.imageurl) {
+        console.warn("Tidak ada imageurl di row 'brand'");
+        return;
+      }
 
-    dbg.innerText = JSON.stringify(res, null, 2);
-
-    if (res.error) {
-      dbg.innerText = 'Query returned error:\\n' + JSON.stringify(res.error, null, 2);
-      return;
+      const img = document.getElementById("brandPhoto");
+      if (img) {
+        img.src = data.imageurl;
+      }
+    } catch (err) {
+      console.error("Fetch error:", err);
     }
-    if (!res.data || !res.data.imageurl) {
-      dbg.innerText = 'No data.imageUrl found. Hasil query:\\n' + JSON.stringify(res, null, 2);
-      return;
-    }
-
-    const url = res.data.imageurl;
-    const img = document.getElementById('brandPhoto');
-    if(img) img.src = url;
-
-    const testImg = new Image();
-    testImg.onload = () => { dbg.appendChild(document.createTextNode('\\nImage loaded ✓')); };
-    testImg.onerror = () => { dbg.appendChild(document.createTextNode('\\nGambar gagal dimuat ✗ (403/404)')); };
-    testImg.src = url;
-
-  } catch (err) {
-    dbg.innerText = 'Fetch error: ' + String(err);
   }
-}
 
-loadBrandImage_debug();
+  loadBrandImage();
 </script>
 </body>
 </html>
