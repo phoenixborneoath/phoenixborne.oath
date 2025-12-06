@@ -459,7 +459,7 @@ async function loadBrandImage_debug() {
   try {
     const res = await supabase
       .from('config')
-      .select('imageUrl')
+      .select('imageurl')
       .eq('id','brand')
       .single();
 
@@ -469,12 +469,12 @@ async function loadBrandImage_debug() {
       dbg.innerText = 'Query returned error:\\n' + JSON.stringify(res.error, null, 2);
       return;
     }
-    if (!res.data || !res.data.imageUrl) {
+    if (!res.data || !res.data.imageurl) {
       dbg.innerText = 'No data.imageUrl found. Hasil query:\\n' + JSON.stringify(res, null, 2);
       return;
     }
 
-    const url = res.data.imageUrl;
+    const url = res.data.imageurl;
     const img = document.getElementById('brandPhoto');
     if(img) img.src = url;
 
