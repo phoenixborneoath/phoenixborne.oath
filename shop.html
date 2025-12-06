@@ -453,6 +453,45 @@ Pastikan akun owner dibuat di Firebase Console (Authentication > Users)');
   }
 
   loadBrandImage();
+const btnBuy = document.getElementById('btnBuy');
+
+btnBuy.addEventListener('click', async () => {
+  const name = document.getElementById('buyerName').value.trim();
+  const address = document.getElementById('buyerAddress').value.trim();
+  const phone = document.getElementById('buyerPhone').value.trim();
+  const size = document.getElementById('buyerSize').value;
+  const qty = parseInt(document.getElementById('buyerQty').value);
+
+  if (!name || !address || !phone) {
+    alert('Lengkapi semua data terlebih dahulu!');
+    return;
+  }
+
+  const price = 250000;
+  const total = qty * price;
+
+  const { data, error } = await supabase
+    .from('orders')
+    .insert([
+      {
+        name: name,
+        address: address,
+        phone: phone,
+        size: size,
+        qty: qty,
+        total: total,
+        status: 'pending'
+      }
+    ]);
+
+  if (error) {
+    alert('Gagal menyimpan pesanan!');
+    console.error(error);
+  } else {
+    alert('Pesanan berhasil dikirim!');
+    window.location.href = "https://wa.me/62895809679191?text=Halo saya sudah order di Phoenixborne Oath";
+  }
+});
 </script>
 </body>
 </html>
