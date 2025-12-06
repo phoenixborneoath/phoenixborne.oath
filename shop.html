@@ -156,10 +156,8 @@
     <div class="modal" style="width:880px;max-width:96%" role="dialog" aria-modal="true">
       <h3 style="margin-top:0">Admin - Lihat Pesanan</h3>
       <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px">
-        <label class="small">Passcode:</label>
-        <input id="adminPass" type="text" style="width:200px;padding:8px;border-radius:6px;background:#0b0b0b;border:1px solid rgba(255,255,255,0.03);color:var(--silver1)" />
-        <button class="btn" id="unlockAdmin">Buka</button>
         <button class="btn" id="exportCsv">Export CSV</button>
+        <div style="margin-left:auto" class="small">Hanya pemilik (owner) yang dapat mengunggah foto brand.</div>
       </div>
 
       <!-- Seller-only: upload brand photo -->
@@ -183,6 +181,32 @@
     </div>
   </div>
 
+  <!-- owner setup / login modals -->
+  <div class="modal-backdrop" id="ownerSetupModal">
+    <div class="modal" role="dialog" aria-modal="true">
+      <h3 style="margin-top:0">Setel Password Owner</h3>
+      <p class="small">Karena ini pertama kali, silakan buat password untuk mengamankan panel Admin. Password ini akan tersimpan **di browser Anda** (localStorage) — pastikan jangan lupa.</p>
+      <div class="field"><label>Password baru</label><input id="ownerPass1" type="password" autocomplete="new-password" /></div>
+      <div class="field"><label>Konfirmasi password</label><input id="ownerPass2" type="password" autocomplete="new-password" /></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+        <button class="btn" id="cancelOwnerSetup">Batal</button>
+        <button class="btn btn-buy" id="saveOwnerPass">Simpan Password</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="ownerLoginModal">
+    <div class="modal" role="dialog" aria-modal="true">
+      <h3 style="margin-top:0">Login Owner</h3>
+      <p class="small">Masukkan password owner untuk mengakses panel Admin.</p>
+      <div class="field"><label>Password</label><input id="ownerLoginPass" type="password" /></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+        <button class="btn" id="cancelOwnerLogin">Batal</button>
+        <button class="btn btn-buy" id="doOwnerLogin">Masuk</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // Wrap event binding in DOMContentLoaded to avoid timing issues
     document.addEventListener('DOMContentLoaded', ()=>{
@@ -200,10 +224,17 @@
       const openAdmin = document.getElementById('open-admin');
       const adminModal = document.getElementById('adminModal');
       const closeAdmin = document.getElementById('closeAdmin');
-      const unlockBtn = document.getElementById('unlockAdmin');
       const adminContent = document.getElementById('adminContent');
       const ordersTable = document.getElementById('ordersTable');
       const exportCsvBtn = document.getElementById('exportCsv');
+      const saveBrandPhotoBtn = document.getElementById('saveBrandPhoto');
+
+      const ownerSetupModal = document.getElementById('ownerSetupModal');
+      const ownerLoginModal = document.getElementById('ownerLoginModal');
+      const saveOwnerPassBtn = document.getElementById('saveOwnerPass');
+      const cancelOwnerSetup = document.getElementById('cancelOwnerSetup');
+      const doOwnerLoginBtn = document.getElementById('doOwnerLogin');
+      const cancelOwnerLogin = document.getElementById('cancelOwnerLogin');
 
       // Basic actions
       function openCheckout(){ modal.style.display='flex'; }
@@ -212,17 +243,71 @@
       buyBtn2 && buyBtn2.addEventListener('click', openCheckout);
       cancel && cancel.addEventListener('click', closeCheckout);
 
-      // Admin open (click + keyboard shortcut)
+      // Helper: SHA-256 hash (returns hex)
+      async function hashPassword(password){
+        const enc = new TextEncoder();
+        const data = enc.encode(password);
+        const hash = await crypto.subtle.digest('SHA-256', data);
+        const arr = Array.from(new Uint8Array(hash));
+        return arr.map(b=>b.toString(16).padStart(2,'0')).join('');
+      }
+
+      // Show/hide modals
       function showAdminModal(){ adminModal.style.display = 'flex'; }
       function hideAdminModal(){ adminModal.style.display = 'none'; adminContent.style.display = 'none'; }
+      function showOwnerSetup(){ ownerSetupModal.style.display = 'flex'; }
+      function hideOwnerSetup(){ ownerSetupModal.style.display = 'none'; }
+      function showOwnerLogin(){ ownerLoginModal.style.display = 'flex'; }
+      function hideOwnerLogin(){ ownerLoginModal.style.display = 'none'; }
 
-      // Add both click and keyboard access
+      // Open Admin flow with owner protection
       if(openAdmin){
-        openAdmin.addEventListener('click', showAdminModal);
-        openAdmin.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') showAdminModal(); });
+        openAdmin.addEventListener('click', async ()=>{
+          const ownerHash = localStorage.getItem('owner_hash');
+          if(!ownerHash){
+            // first-time setup
+            showOwnerSetup();
+            return;
+          }
+          showOwnerLogin();
+        });
+        openAdmin.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') openAdmin.click(); });
       }
-      // global shortcut: press 'A' to open admin (for quick testing)
-      document.addEventListener('keydown', (e)=>{ if(e.key.toLowerCase()==='a' && !e.metaKey && !e.ctrlKey){ showAdminModal(); } });
+
+      // keyboard shortcut: 'A' to open admin (convenience only)
+      document.addEventListener('keydown', (e)=>{ if(e.key.toLowerCase()==='a' && !e.metaKey && !e.ctrlKey){ openAdmin && openAdmin.click(); } });
+
+      // Owner setup: create password
+      saveOwnerPassBtn && saveOwnerPassBtn.addEventListener('click', async ()=>{
+        const p1 = document.getElementById('ownerPass1').value || '';
+        const p2 = document.getElementById('ownerPass2').value || '';
+        if(p1.length < 6){ alert('Password minimal 6 karakter.'); return; }
+        if(p1 !== p2){ alert('Password dan konfirmasi tidak cocok.'); return; }
+        const h = await hashPassword(p1);
+        localStorage.setItem('owner_hash', h);
+        alert('Password owner disimpan di browser. Selanjutnya gunakan untuk login.');
+        hideOwnerSetup();
+        showOwnerLogin();
+      });
+      cancelOwnerSetup && cancelOwnerSetup.addEventListener('click', ()=>{ hideOwnerSetup(); });
+
+      // Owner login: verify password
+      doOwnerLoginBtn && doOwnerLoginBtn.addEventListener('click', async ()=>{
+        const p = document.getElementById('ownerLoginPass').value || '';
+        const stored = localStorage.getItem('owner_hash');
+        if(!stored){ alert('Owner belum diset.'); hideOwnerLogin(); showOwnerSetup(); return; }
+        const h = await hashPassword(p);
+        if(h === stored){
+          // set short-lived session flag (cleared when browser storage cleared)
+          localStorage.setItem('owner_session','1');
+          hideOwnerLogin();
+          // open admin
+          showAdminModal();
+          adminContent.style.display = 'block';
+          renderOrders();
+        } else { alert('Password salah.'); }
+      });
+      cancelOwnerLogin && cancelOwnerLogin.addEventListener('click', ()=>{ hideOwnerLogin(); });
 
       closeAdmin && closeAdmin.addEventListener('click', hideAdminModal);
 
@@ -248,10 +333,7 @@
         openPayment(order.id);
       });
 
-      function saveOrder(order){
-        const list = JSON.parse(localStorage.getItem('orders_v1')||'[]');
-        list.push(order); localStorage.setItem('orders_v1',JSON.stringify(list));
-      }
+      function saveOrder(order){ const list = JSON.parse(localStorage.getItem('orders_v1')||'[]'); list.push(order); localStorage.setItem('orders_v1',JSON.stringify(list)); }
 
       // simulated payment page
       function openPayment(orderId){
@@ -290,13 +372,7 @@
       function getOrder(id){ const list = JSON.parse(localStorage.getItem('orders_v1')||'[]'); return list.find(o=>o.id===id); }
       function markOrderPaid(id, trx, proofData){ const list = JSON.parse(localStorage.getItem('orders_v1')||'[]'); const idx = list.findIndex(o=>o.id===id); if(idx===-1) return; list[idx].status='paid'; list[idx].trx=trx||''; if(proofData) list[idx].proof=proofData; list[idx].paidAt=new Date().toISOString(); localStorage.setItem('orders_v1',JSON.stringify(list)); }
 
-      // admin unlock + render
-      unlockBtn && unlockBtn.addEventListener('click',()=>{
-        const pass = document.getElementById('adminPass').value.trim();
-        if(pass!== 'admin123'){ alert('Passcode salah. (default demo: admin123)'); return; }
-        adminContent.style.display='block'; renderOrders();
-      });
-
+      // render orders
       function renderOrders(){
         const list = JSON.parse(localStorage.getItem('orders_v1')||'[]');
         ordersTable.innerHTML='';
@@ -362,9 +438,11 @@
       // helpers
       function fileToDataURL(file){ return new Promise((res,rej)=>{ const r = new FileReader(); r.onload = ()=>res(r.result); r.onerror=rej; r.readAsDataURL(file); }) }
 
-      // ADMIN: handle brand photo upload (seller only)
-      const saveBrandPhotoBtn = document.getElementById('saveBrandPhoto');
+      // ADMIN: handle brand photo upload (seller only) - only available after owner login
       saveBrandPhotoBtn && saveBrandPhotoBtn.addEventListener('click', async ()=>{
+        // check owner logged in by verifying owner_session flag
+        const session = localStorage.getItem('owner_session');
+        if(!session){ alert('Akses ditolak. Login owner diperlukan.'); hideOwnerLogin(); showOwnerLogin(); return; }
         const f = document.getElementById('adminPhotoInput').files[0];
         if(!f){ alert('Pilih file terlebih dahulu'); return; }
         const data = await fileToDataURL(f);
@@ -373,11 +451,13 @@
         alert('Foto brand tersimpan.');
       });
 
+      // create a simple owner_session after successful login to avoid re-login during the session
+      // set owner_session when owner successfully logs in
+      // Update: owner session is set in doOwnerLoginBtn handler above when login success
+
       // load saved brand photo if exists
       const p = localStorage.getItem('brand_photo_v1');
       if(p){ brandPhoto.src = p; miniPhoto.src = p; miniPhoto.style.display='block'; miniPlaceholder.style.display='none'; }
 
     }); // end DOMContentLoaded
   </script>
-</body>
-</html>
