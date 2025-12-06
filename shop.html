@@ -14,7 +14,7 @@
       --danger:#b22222;
       font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
     }
-    html,body{height:100%;margin:0;background:var(--bg);color:var(--silver1);}
+    html,body{height:100%;margin:0;background:var(--bg);color:var(--silver1);}    
     .container{max-width:980px;margin:28px auto;padding:28px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);box-shadow:0 8px 30px rgba(0,0,0,0.7);border-radius:12px}
     header{display:flex;gap:18px;align-items:center}
     .logo{width:74px;height:74px;border-radius:8px;background:#050505;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,0.06)}
@@ -48,7 +48,9 @@
     footer.note{margin-top:14px;font-size:12px;color:var(--silver2)}
 
     /* admin link */
-    .admin-link{font-size:13px;color:var(--silver2);text-decoration:underline;cursor:pointer}
+    .admin-link{font-size:13px;color:var(--silver2);text-decoration:underline;cursor:pointer;position:relative;z-index:9999;padding:6px 8px;border-radius:6px}
+    .admin-link:focus{outline:2px solid rgba(255,255,255,0.08)}
+
     table{width:100%;border-collapse:collapse;margin-top:8px}
     th,td{padding:8px;border-bottom:1px solid rgba(255,255,255,0.03);font-size:13px;text-align:left}
     .status-paid{color:#81c784;font-weight:700}
@@ -71,7 +73,7 @@
       </div>
       <div style="margin-left:auto" class="top-actions">
         <div class="small">Theme: <strong style="color:var(--silver1)">Black / Silver</strong></div>
-        <div style="margin-left:12px" class="admin-link" id="open-admin">Admin</div>
+        <button style="margin-left:12px" class="admin-link" id="open-admin" aria-label="Buka admin">Admin</button>
       </div>
     </header>
 
@@ -182,56 +184,200 @@
   </div>
 
   <script>
-    // --- Utilities / simple SPA logic ---
-    const brandPhoto = document.getElementById('brandPhoto');
-    const miniPhoto = document.getElementById('miniPhoto');
-    const miniPlaceholder = document.getElementById('miniPlaceholder');
-    const photoWrap = document.getElementById('photoWrap');
+    // Wrap event binding in DOMContentLoaded to avoid timing issues
+    document.addEventListener('DOMContentLoaded', ()=>{
+      // Elements
+      const brandPhoto = document.getElementById('brandPhoto');
+      const miniPhoto = document.getElementById('miniPhoto');
+      const miniPlaceholder = document.getElementById('miniPlaceholder');
+      const photoWrap = document.getElementById('photoWrap');
 
-    // open modal
-    const modal = document.getElementById('modal');
-    const buyBtn = document.getElementById('buyBtn');
-    const buyBtn2 = document.getElementById('buyBtn2');
-    const cancel = document.getElementById('cancel');
-    buyBtn.addEventListener('click',()=>openCheckout());
-    buyBtn2.addEventListener('click',()=>openCheckout());
-    cancel.addEventListener('click',()=>closeCheckout());
+      const modal = document.getElementById('modal');
+      const buyBtn = document.getElementById('buyBtn');
+      const buyBtn2 = document.getElementById('buyBtn2');
+      const cancel = document.getElementById('cancel');
 
-    function openCheckout(){ modal.style.display='flex'; }
-    function closeCheckout(){ modal.style.display='none'; }
+      const openAdmin = document.getElementById('open-admin');
+      const adminModal = document.getElementById('adminModal');
+      const closeAdmin = document.getElementById('closeAdmin');
+      const unlockBtn = document.getElementById('unlockAdmin');
+      const adminContent = document.getElementById('adminContent');
+      const ordersTable = document.getElementById('ordersTable');
+      const exportCsvBtn = document.getElementById('exportCsv');
 
-    // submit order -> save to localStorage and redirect to payment view
-    document.getElementById('submitOrder').addEventListener('click', async ()=>{
-      const name = document.getElementById('inpName').value.trim();
-      const address = document.getElementById('inpAddress').value.trim();
-      const size = document.getElementById('inpSize').value;
-      const phone = document.getElementById('inpPhone').value.trim();
-      const qty = parseInt(document.getElementById('qty').value)||1;
+      // Basic actions
+      function openCheckout(){ modal.style.display='flex'; }
+      function closeCheckout(){ modal.style.display='none'; }
+      buyBtn && buyBtn.addEventListener('click', openCheckout);
+      buyBtn2 && buyBtn2.addEventListener('click', openCheckout);
+      cancel && cancel.addEventListener('click', closeCheckout);
 
-      if(!name || !address || !phone){
-        alert('Lengkapi nama, alamat, dan nomor telepon.');
-        return;
+      // Admin open (click + keyboard shortcut)
+      function showAdminModal(){ adminModal.style.display = 'flex'; }
+      function hideAdminModal(){ adminModal.style.display = 'none'; adminContent.style.display = 'none'; }
+
+      // Add both click and keyboard access
+      if(openAdmin){
+        openAdmin.addEventListener('click', showAdminModal);
+        openAdmin.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') showAdminModal(); });
+      }
+      // global shortcut: press 'A' to open admin (for quick testing)
+      document.addEventListener('keydown', (e)=>{ if(e.key.toLowerCase()==='a' && !e.metaKey && !e.ctrlKey){ showAdminModal(); } });
+
+      closeAdmin && closeAdmin.addEventListener('click', hideAdminModal);
+
+      // submit order -> save to localStorage and redirect to payment view
+      const submitOrderBtn = document.getElementById('submitOrder');
+      submitOrderBtn && submitOrderBtn.addEventListener('click', async ()=>{
+        const name = document.getElementById('inpName').value.trim();
+        const address = document.getElementById('inpAddress').value.trim();
+        const size = document.getElementById('inpSize').value;
+        const phone = document.getElementById('inpPhone').value.trim();
+        const qty = parseInt(document.getElementById('qty').value)||1;
+
+        if(!name || !address || !phone){ alert('Lengkapi nama, alamat, dan nomor telepon.'); return; }
+
+        let photoData = localStorage.getItem('brand_photo_v1') || brandPhoto.src || '';
+        const id = 'ORD' + Date.now();
+        const priceEach = parseInt(document.getElementById('displayPrice').innerText) || 250000;
+        const total = priceEach * qty;
+
+        const order = { id, name, address, size, phone, qty, total, photo: photoData, status:'pending', createdAt: new Date().toISOString() };
+        saveOrder(order);
+        closeCheckout();
+        openPayment(order.id);
+      });
+
+      function saveOrder(order){
+        const list = JSON.parse(localStorage.getItem('orders_v1')||'[]');
+        list.push(order); localStorage.setItem('orders_v1',JSON.stringify(list));
       }
 
-      // collect photo as base64 (from seller-uploaded brand photo if exists)
-      let photoData = localStorage.getItem('brand_photo_v1') || brandPhoto.src || '';
-      const id = 'ORD' + Date.now();
-      const priceEach = parseInt(document.getElementById('displayPrice').innerText) || 250000;
-      const total = priceEach * qty;
+      // simulated payment page
+      function openPayment(orderId){
+        const container = document.querySelector('.container');
+        container.innerHTML = `
+          <div style="padding:28px;color:var(--silver1)">
+            <h2>Pembayaran untuk ${orderId}</h2>
+            <p class="small">Silakan lakukan pembayaran sejumlah <strong>Rp <span id=payAmount></span></strong> ke rekening: <br><strong>BNI 123-456-789 a.n Phoenixborne Oath</strong></p>
+            <p class="small">Setelah transfer, unggah bukti transfer di bawah atau catat nomor transaksi, lalu klik Konfirmasi.</p>
 
-      const order = { id, name, address, size, phone, qty, total, photo: photoData, status:'pending', createdAt: new Date().toISOString() };
-      saveOrder(order);
-      closeCheckout();
+            <div style="background:var(--panel);padding:16px;border-radius:8px;margin-top:12px">
+              <div class="field"><label>Nomor Transaksi / Catatan</label><input id="trxId" type="text" /></div>
+              <div class="field"><label>Unggah bukti transfer (opsional)</label><input id="proof" type="file" accept="image/*" /></div>
+              <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button class="btn" id="backShop">Kembali</button><button class="btn btn-buy" id="confirmPay">Konfirmasi Pembayaran</button></div>
+            </div>
 
-      // redirect to simulated payment page (single file SPA)
-      openPayment(order.id);
-    });
+            <div style="margin-top:18px" class="small">Catatan: ini demo front-end. Untuk verifikasi otomatis gunakan webhook dari gateway.</div>
+          </div>
+        `;
 
-    function saveOrder(order){
-      const list = JSON.parse(localStorage.getItem('orders_v1')||'[]');
-      list.push(order);
-      localStorage.setItem('orders_v1',JSON.stringify(list));
-    }
+        const order = getOrder(orderId);
+        document.getElementById('payAmount').innerText = order.total;
 
-    // simulated payment page
-    function openPayment(orderI
+        document.getElementById('backShop').addEventListener('click',()=>location.reload());
+
+        document.getElementById('confirmPay').addEventListener('click', async ()=>{
+          const trx = document.getElementById('trxId').value.trim();
+          const proofFile = document.getElementById('proof').files[0];
+          let proofData = '';
+          if(proofFile){ proofData = await fileToDataURL(proofFile); }
+          markOrderPaid(orderId, trx, proofData);
+          container.innerHTML = `<div style="padding:28px;color:var(--silver1)"><h2>Terima kasih! Pesanan Anda (${orderId}) tercatat.</h2><p class="small">Kami akan memverifikasi pembayaran Anda. Anda dapat menutup halaman ini.</p></div>`;
+        });
+      }
+
+      function getOrder(id){ const list = JSON.parse(localStorage.getItem('orders_v1')||'[]'); return list.find(o=>o.id===id); }
+      function markOrderPaid(id, trx, proofData){ const list = JSON.parse(localStorage.getItem('orders_v1')||'[]'); const idx = list.findIndex(o=>o.id===id); if(idx===-1) return; list[idx].status='paid'; list[idx].trx=trx||''; if(proofData) list[idx].proof=proofData; list[idx].paidAt=new Date().toISOString(); localStorage.setItem('orders_v1',JSON.stringify(list)); }
+
+      // admin unlock + render
+      unlockBtn && unlockBtn.addEventListener('click',()=>{
+        const pass = document.getElementById('adminPass').value.trim();
+        if(pass!== 'admin123'){ alert('Passcode salah. (default demo: admin123)'); return; }
+        adminContent.style.display='block'; renderOrders();
+      });
+
+      function renderOrders(){
+        const list = JSON.parse(localStorage.getItem('orders_v1')||'[]');
+        ordersTable.innerHTML='';
+        if(!list.length){ ordersTable.innerHTML = '<tr><td colspan="9" class="small">Belum ada pesanan.</td></tr>'; return; }
+        list.slice().reverse().forEach(o=>{
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${o.id}</td>
+            <td>${escapeHtml(o.name)}</td>
+            <td style="max-width:200px">${escapeHtml(o.address)}</td>
+            <td>${o.size}</td>
+            <td>${o.qty}</td>
+            <td>${escapeHtml(o.phone)}</td>
+            <td>Rp ${o.total}</td>
+            <td class="${o.status==='paid'?'status-paid':'status-unpaid'}">${o.status}</td>
+            <td>
+              ${o.status!=='paid'?`<button class='btn' data-id='${o.id}' data-action='markPaid'>Tandai Lunas</button>`:''}
+              <button class='btn' data-id='${o.id}' data-action='view'>Lihat</button>
+            </td>
+          `;
+          ordersTable.appendChild(tr);
+        });
+
+        ordersTable.querySelectorAll('button').forEach(b=>b.addEventListener('click',(e)=>{
+          const id = e.currentTarget.dataset.id; const action = e.currentTarget.dataset.action;
+          if(action==='markPaid'){ if(confirm('Tandai pesanan ini sebagai LUNAS?')){ markOrderPaid(id,'manual-admin',''); renderOrders(); } }
+          else if(action==='view'){ const o = getOrder(id); showOrderDetail(o); }
+        }));
+      }
+
+      function showOrderDetail(o){
+        const html = `
+          <div style="padding:12px;background:#060606;border-radius:8px;margin-top:10px">
+            <div><strong>ID:</strong> ${o.id}</div>
+            <div><strong>Nama:</strong> ${escapeHtml(o.name)}</div>
+            <div><strong>Alamat:</strong> ${escapeHtml(o.address)}</div>
+            <div><strong>HP:</strong> ${escapeHtml(o.phone)}</div>
+            <div><strong>Status:</strong> ${o.status}</div>
+            <div style="margin-top:8px">${o.proof?`<div><strong>Bukti:</strong><br><img src='${o.proof}' style='max-width:260px;border-radius:6px;margin-top:8px' /></div>`:''}</div>
+            <div style="margin-top:8px"><button class='btn' id='markPaidNow'>Tandai Lunas</button></div>
+          </div>
+        `;
+        const wrapper = document.createElement('div'); wrapper.innerHTML = html;
+        adminContent.appendChild(wrapper);
+        wrapper.querySelector('#markPaidNow').addEventListener('click',()=>{ if(confirm('Tandai lunas?')){ markOrderPaid(o.id,'admin-confirm',''); renderOrders(); wrapper.remove(); }});
+      }
+
+      exportCsvBtn && exportCsvBtn.addEventListener('click',()=>{
+        const list = JSON.parse(localStorage.getItem('orders_v1')||'[]');
+        if(!list.length){ alert('Tidak ada data'); return; }
+        const rows = ['id,name,address,phone,size,qty,total,status,createdAt'];
+        list.forEach(o=>rows.push([o.id,escapeCsv(o.name),escapeCsv(o.address),o.phone,o.size,o.qty,o.total,o.status,o.createdAt].join(',')));
+        const blob = new Blob([rows.join('\n')],{type:'text/csv'});
+        const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download='orders.csv'; a.click(); URL.revokeObjectURL(url);
+      });
+
+      function escapeHtml(s){ return (s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+      function escapeCsv(s){ return '"'+(s||'').replaceAll('"','""')+'"'; }
+
+      // clear / reset demo
+      document.getElementById('clearBtn').addEventListener('click',()=>{ if(confirm('Reset demo (hapus foto mini & qty)?')){ localStorage.removeItem('orders_v1'); location.reload(); }});
+
+      // helpers
+      function fileToDataURL(file){ return new Promise((res,rej)=>{ const r = new FileReader(); r.onload = ()=>res(r.result); r.onerror=rej; r.readAsDataURL(file); }) }
+
+      // ADMIN: handle brand photo upload (seller only)
+      const saveBrandPhotoBtn = document.getElementById('saveBrandPhoto');
+      saveBrandPhotoBtn && saveBrandPhotoBtn.addEventListener('click', async ()=>{
+        const f = document.getElementById('adminPhotoInput').files[0];
+        if(!f){ alert('Pilih file terlebih dahulu'); return; }
+        const data = await fileToDataURL(f);
+        localStorage.setItem('brand_photo_v1', data);
+        brandPhoto.src = data; miniPhoto.src = data; miniPhoto.style.display='block'; miniPlaceholder.style.display='none';
+        alert('Foto brand tersimpan.');
+      });
+
+      // load saved brand photo if exists
+      const p = localStorage.getItem('brand_photo_v1');
+      if(p){ brandPhoto.src = p; miniPhoto.src = p; miniPhoto.style.display='block'; miniPlaceholder.style.display='none'; }
+
+    }); // end DOMContentLoaded
+  </script>
+</body>
+</html>
