@@ -56,8 +56,9 @@
     <main class="layout">
       <section class="card">
         <div class="photo" id="photoWrap">
-          <img id="brandPhoto" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600'><rect width='100%' height='100%' fill='%23080808'/><text x='50%' y='50%' fill='%23bfbfbf' font-size='28' font-family='Arial' text-anchor='middle' alignment-baseline='middle'>Foto brand akan ditampilkan di sini</text></svg>" alt="brand photo">
-          <div class="upload-note">Foto dikelola oleh penjual — hanya owner yang bisa mengunggah melalui Admin</div>
+         <img id="brandPhoto" src="" 
+     alt="Brand Photo"
+     style="width:100%; height:auto; border-radius:10px; object-fit:cover;">
         </div>
 
         <div class="meta">
@@ -430,5 +431,30 @@ Pastikan akun owner dibuat di Firebase Console (Authentication > Users)');
     </ol>
     <div style="margin-top:6px;color:var(--silver1)">Butuh saya bantu pasang Firebase (saya bisa kirim langkah-langkah lengkap atau kode yang disesuaikan).</div>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const supabaseUrl = "https://cbbcmvgyascgzfquyrni.supabase.co";
+const supabaseKey = "sb_publishable_Ja1DPAjTxp3H3H3VB-fpl9cA_BiuIoXO6";
+const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+// ambil URL gambar brand dari table config
+async function loadBrandImage() {
+  const { data, error } = await supabase
+    .from("config")
+    .select("imageUrl")
+    .eq("id", "brand")
+    .single();
+
+  if (error) {
+    console.error("Gagal memuat gambar brand:", error);
+    return;
+  }
+
+  const img = document.getElementById("brandPhoto");
+  if (img) img.src = data.imageUrl;
+}
+
+loadBrandImage();
+</script>
 </body>
 </html>
