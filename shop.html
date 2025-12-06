@@ -5,62 +5,38 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Phoenixborne Oath — Shop (Black Metal)</title>
   <style>
-    :root{
-      --bg:#0b0b0b;
-      --panel:#0f0f10;
-      --silver1: #cfcfcf;
-      --silver2: #9ea0a3;
-      --accent: linear-gradient(90deg,#d9d9d9,#b7b7b7,#8f8f8f);
-      --danger:#b22222;
-      font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-    }
-    html,body{height:100%;margin:0;background:var(--bg);color:var(--silver1);}    
+    :root{ --bg:#0b0b0b; --panel:#0f0f10; --silver1:#cfcfcf; --silver2:#9ea0a3; --accent:linear-gradient(90deg,#d9d9d9,#b7b7b7,#8f8f8f); font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial; }
+    html,body{height:100%;margin:0;background:var(--bg);color:var(--silver1)}
     .container{max-width:980px;margin:28px auto;padding:28px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);box-shadow:0 8px 30px rgba(0,0,0,0.7);border-radius:12px}
     header{display:flex;gap:18px;align-items:center}
     .logo{width:74px;height:74px;border-radius:8px;background:#050505;display:flex;align-items:center;justify-content:center;border:2px solid rgba(255,255,255,0.06)}
     .brand{font-size:22px;letter-spacing:1px;font-weight:700;background:-webkit-linear-gradient(#e9e9e9,#9f9f9f);-webkit-background-clip:text;color:transparent}
     .tag{font-size:12px;color:var(--silver2)}
-
     .layout{display:grid;grid-template-columns:1fr 360px;gap:26px;margin-top:20px}
     .card{background:var(--panel);padding:18px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
-
-    /* product area */
     .photo{height:420px;border-radius:8px;display:flex;align-items:center;justify-content:center;background:repeating-linear-gradient(135deg, rgba(255,255,255,0.01) 0 1px, transparent 1px 30px);position:relative;overflow:hidden}
     .photo img{max-width:100%;max-height:100%;object-fit:contain}
     .upload-note{position:absolute;left:12px;bottom:12px;font-size:12px;color:var(--silver2)}
-
     .meta{margin-top:14px}
     .title{font-size:18px;font-weight:700}
     .price{font-size:20px;margin-top:8px}
-
     .btn{display:inline-block;padding:12px 18px;border-radius:10px;background:transparent;border:2px solid rgba(255,255,255,0.08);cursor:pointer;font-weight:700}
     .btn-buy{background-image:var(--accent);color:#0b0b0b;border:none;padding:12px 22px}
-
-    /* modal */
     .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;z-index:40}
     .modal{width:520px;background:#0d0d0d;padding:18px;border-radius:10px;border:1px solid rgba(255,255,255,0.04)}
     .field{margin-bottom:10px}
     label{display:block;font-size:13px;color:var(--silver2);margin-bottom:6px}
-    input[type=text], input[type=tel], textarea, select{width:100%;padding:10px;border-radius:8px;background:#0b0b0b;border:1px solid rgba(255,255,255,0.03);color:var(--silver1)}
+    input[type=text], input[type=tel], input[type=password], textarea, select{width:100%;padding:10px;border-radius:8px;background:#0b0b0b;border:1px solid rgba(255,255,255,0.03);color:var(--silver1)}
     textarea{min-height:80px}
-
     .muted{font-size:12px;color:var(--silver2)}
     footer.note{margin-top:14px;font-size:12px;color:var(--silver2)}
-
-    /* admin link */
     .admin-link{font-size:13px;color:var(--silver2);text-decoration:underline;cursor:pointer;position:relative;z-index:9999;padding:6px 8px;border-radius:6px}
-    .admin-link:focus{outline:2px solid rgba(255,255,255,0.08)}
-
     table{width:100%;border-collapse:collapse;margin-top:8px}
     th,td{padding:8px;border-bottom:1px solid rgba(255,255,255,0.03);font-size:13px;text-align:left}
     .status-paid{color:#81c784;font-weight:700}
     .status-unpaid{color:#ffa726;font-weight:700}
-
     .small{font-size:12px;color:var(--silver2)}
-
-    .top-actions{display:flex;gap:8px;align-items:center}
-
-    @media(max-width:900px){.layout{grid-template-columns:1fr;}.photo{height:320px}}
+    @media(max-width:900px){.layout{grid-template-columns:1fr}.photo{height:320px}}
   </style>
 </head>
 <body>
@@ -80,8 +56,8 @@
     <main class="layout">
       <section class="card">
         <div class="photo" id="photoWrap">
-          <img id="brandPhoto" src="https://url-shortener.me/22DS" alt="brand photo"><svg xmlns='http://www.w3.org/2000/svg' width='250' height='150'><rect width='100%' height='100%' fill='%23080808'/><text x='50%' y='50%' fill='%23bfbfbf' font-size='28' font-family='Arial' text-anchor='middle' alignment-baseline='middle'>Foto brand akan diunggah oleh penjual</text></svg>" alt="brand photo">
-          <div class="upload-note">Foto dikelola oleh penjual — tidak ada pilihan upload untuk pembeli</div>
+          <img id="brandPhoto" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600'><rect width='100%' height='100%' fill='%23080808'/><text x='50%' y='50%' fill='%23bfbfbf' font-size='28' font-family='Arial' text-anchor='middle' alignment-baseline='middle'>Foto brand akan ditampilkan di sini</text></svg>" alt="brand photo">
+          <div class="upload-note">Foto dikelola oleh penjual — hanya owner yang bisa mengunggah melalui Admin</div>
         </div>
 
         <div class="meta">
@@ -89,7 +65,7 @@
           <div class="price">Rp 250.000</div>
 
           <div style="margin-top:14px;display:flex;gap:8px;align-items:center">
-            <div class="small">Gambar produk hanya dapat diubah oleh penjual melalui panel Admin.</div>
+            <div class="small">Gambar produk hanya dapat diubah oleh owner melalui panel Admin.</div>
             <button class="btn btn-buy" id="buyBtn">Beli Sekarang</button>
           </div>
 
@@ -130,7 +106,7 @@
           <button class="btn" id="clearBtn">Reset</button>
         </div>
 
-        <footer class="note">Catatan: ini contoh front-end. Untuk pembayaran real gunakan gateway (Midtrans / Xendit / Stripe) dan server-side webhook untuk verifikasi otomatis.</footer>
+        <footer class="note">Catatan: implementasi pembayaran dan verifikasi otomatis memerlukan gateway + backend. Di sini demo menggunakan Firebase untuk menyimpan data pesanan dan foto.</footer>
       </aside>
     </main>
 
@@ -151,21 +127,20 @@
     </div>
   </div>
 
-  <!-- admin modal -->
+  <!-- admin modal (protected by Firebase Auth) -->
   <div class="modal-backdrop" id="adminModal">
     <div class="modal" style="width:880px;max-width:96%" role="dialog" aria-modal="true">
-      <h3 style="margin-top:0">Admin - Lihat Pesanan</h3>
+      <h3 style="margin-top:0">Admin - Panel Owner</h3>
       <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px">
         <button class="btn" id="exportCsv">Export CSV</button>
-        <div style="margin-left:auto" class="small">Hanya pemilik (owner) yang dapat mengunggah foto brand.</div>
+        <div style="margin-left:auto" class="small">Hanya owner yang bisa upload foto brand dan melihat pesanan di sini.</div>
       </div>
 
-      <!-- Seller-only: upload brand photo -->
       <div style="margin-bottom:12px;display:flex;gap:8px;align-items:center">
-        <label class="small">Unggah Foto Brand (hanya penjual):</label>
+        <label class="small">Unggah Foto Brand (owner):</label>
         <input id="adminPhotoInput" type="file" accept="image/*" />
         <button class="btn" id="saveBrandPhoto">Simpan Foto</button>
-        <div class="small">Foto akan tampil di halaman produk setelah tersimpan.</div>
+        <div class="small">Foto akan disimpan di Firebase Storage dan tampil untuk semua pengunjung.</div>
       </div>
 
       <div id="adminContent" style="max-height:520px;overflow:auto;display:none">
@@ -173,33 +148,23 @@
           <thead><tr><th>ID</th><th>Nama</th><th>Alamat</th><th>Ukuran</th><th>Qty</th><th>HP</th><th>Total</th><th>Status</th><th>Aksi</th></tr></thead>
           <tbody id="ordersTable"></tbody>
         </table>
-        <div class="small" style="margin-top:10px">Untuk verifikasi transfer: cek bukti transfer yang dikirim pembeli (atau cocokkan rekening & nominal), lalu klik 'Tandai Lunas'.</div>
+        <div class="small" style="margin-top:10px">Klik 'Tandai Lunas' setelah verifikasi transfer. Bukti transfer akan tersimpan di Storage dan link disimpan di order.</div>
       </div>
+
       <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+        <button class="btn" id="logoutBtn">Logout</button>
         <button class="btn" id="closeAdmin">Tutup</button>
       </div>
     </div>
   </div>
 
-  <!-- owner setup / login modals -->
-  <div class="modal-backdrop" id="ownerSetupModal">
-    <div class="modal" role="dialog" aria-modal="true">
-      <h3 style="margin-top:0">Setel Password Owner</h3>
-      <p class="small">Karena ini pertama kali, silakan buat password untuk mengamankan panel Admin. Password ini akan tersimpan **di browser Anda** (localStorage) — pastikan jangan lupa.</p>
-      <div class="field"><label>Password baru</label><input id="ownerPass1" type="password" autocomplete="new-password" /></div>
-      <div class="field"><label>Konfirmasi password</label><input id="ownerPass2" type="password" autocomplete="new-password" /></div>
-      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
-        <button class="btn" id="cancelOwnerSetup">Batal</button>
-        <button class="btn btn-buy" id="saveOwnerPass">Simpan Password</button>
-      </div>
-    </div>
-  </div>
-
+  <!-- owner login modal (firebase auth) -->
   <div class="modal-backdrop" id="ownerLoginModal">
     <div class="modal" role="dialog" aria-modal="true">
-      <h3 style="margin-top:0">Login Owner</h3>
-      <p class="small">Masukkan password owner untuk mengakses panel Admin.</p>
-      <div class="field"><label>Password</label><input id="ownerLoginPass" type="password" /></div>
+      <h3 style="margin-top:0">Owner Login</h3>
+      <p class="small">Masuk untuk mengelola foto brand & melihat pesanan (gunakan akun owner yang dibuat di Firebase Console).</p>
+      <div class="field"><label>Email</label><input id="ownerEmail" type="text" /></div>
+      <div class="field"><label>Password</label><input id="ownerPassword" type="password" /></div>
       <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
         <button class="btn" id="cancelOwnerLogin">Batal</button>
         <button class="btn btn-buy" id="doOwnerLogin">Masuk</button>
@@ -207,257 +172,263 @@
     </div>
   </div>
 
+  <!-- payment page container (will be rendered by JS) -->
+
+  <!-- Firebase SDKs (compat) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+
   <script>
-    // Wrap event binding in DOMContentLoaded to avoid timing issues
+    // ---------- CONFIG: ganti ini dengan konfigurasi Firebase project kamu ----------
+    const firebaseConfig = {
+      apiKey: "REPLACE_API_KEY",
+      authDomain: "REPLACE_PROJECT.firebaseapp.com",
+      projectId: "REPLACE_PROJECT",
+      storageBucket: "REPLACE_PROJECT.appspot.com",
+      messagingSenderId: "REPLACE",
+      appId: "REPLACE_APPID"
+    };
+    // -------------------------------------------------------------------------------
+
+    // initialize
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+
+    // helper: show/hide modal
+    function show(modal){ modal.style.display='flex'; }
+    function hide(modal){ modal.style.display='none'; }
+
+    // DOM ready
     document.addEventListener('DOMContentLoaded', ()=>{
-      // Elements
       const brandPhoto = document.getElementById('brandPhoto');
       const miniPhoto = document.getElementById('miniPhoto');
       const miniPlaceholder = document.getElementById('miniPlaceholder');
-      const photoWrap = document.getElementById('photoWrap');
-
-      const modal = document.getElementById('modal');
-      const buyBtn = document.getElementById('buyBtn');
-      const buyBtn2 = document.getElementById('buyBtn2');
-      const cancel = document.getElementById('cancel');
 
       const openAdmin = document.getElementById('open-admin');
       const adminModal = document.getElementById('adminModal');
-      const closeAdmin = document.getElementById('closeAdmin');
       const adminContent = document.getElementById('adminContent');
-      const ordersTable = document.getElementById('ordersTable');
+      const closeAdmin = document.getElementById('closeAdmin');
       const exportCsvBtn = document.getElementById('exportCsv');
       const saveBrandPhotoBtn = document.getElementById('saveBrandPhoto');
+      const adminPhotoInput = document.getElementById('adminPhotoInput');
+      const ordersTable = document.getElementById('ordersTable');
+      const logoutBtn = document.getElementById('logoutBtn');
 
-      const ownerSetupModal = document.getElementById('ownerSetupModal');
       const ownerLoginModal = document.getElementById('ownerLoginModal');
-      const saveOwnerPassBtn = document.getElementById('saveOwnerPass');
-      const cancelOwnerSetup = document.getElementById('cancelOwnerSetup');
       const doOwnerLoginBtn = document.getElementById('doOwnerLogin');
       const cancelOwnerLogin = document.getElementById('cancelOwnerLogin');
 
-      // Basic actions
-      function openCheckout(){ modal.style.display='flex'; }
-      function closeCheckout(){ modal.style.display='none'; }
-      buyBtn && buyBtn.addEventListener('click', openCheckout);
-      buyBtn2 && buyBtn2.addEventListener('click', openCheckout);
-      cancel && cancel.addEventListener('click', closeCheckout);
-
-      // Helper: SHA-256 hash (returns hex)
-      async function hashPassword(password){
-        const enc = new TextEncoder();
-        const data = enc.encode(password);
-        const hash = await crypto.subtle.digest('SHA-256', data);
-        const arr = Array.from(new Uint8Array(hash));
-        return arr.map(b=>b.toString(16).padStart(2,'0')).join('');
-      }
-
-      // Show/hide modals
-      function showAdminModal(){ adminModal.style.display = 'flex'; }
-      function hideAdminModal(){ adminModal.style.display = 'none'; adminContent.style.display = 'none'; }
-      function showOwnerSetup(){ ownerSetupModal.style.display = 'flex'; }
-      function hideOwnerSetup(){ ownerSetupModal.style.display = 'none'; }
-      function showOwnerLogin(){ ownerLoginModal.style.display = 'flex'; }
-      function hideOwnerLogin(){ ownerLoginModal.style.display = 'none'; }
-
-      // Open Admin flow with owner protection
-      if(openAdmin){
-        openAdmin.addEventListener('click', async ()=>{
-          const ownerHash = localStorage.getItem('owner_hash');
-          if(!ownerHash){
-            // first-time setup
-            showOwnerSetup();
-            return;
-          }
-          showOwnerLogin();
-        });
-        openAdmin.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') openAdmin.click(); });
-      }
-
-      // keyboard shortcut: 'A' to open admin (convenience only)
-      document.addEventListener('keydown', (e)=>{ if(e.key.toLowerCase()==='a' && !e.metaKey && !e.ctrlKey){ openAdmin && openAdmin.click(); } });
-
-      // Owner setup: create password
-      saveOwnerPassBtn && saveOwnerPassBtn.addEventListener('click', async ()=>{
-        const p1 = document.getElementById('ownerPass1').value || '';
-        const p2 = document.getElementById('ownerPass2').value || '';
-        if(p1.length < 6){ alert('Password minimal 6 karakter.'); return; }
-        if(p1 !== p2){ alert('Password dan konfirmasi tidak cocok.'); return; }
-        const h = await hashPassword(p1);
-        localStorage.setItem('owner_hash', h);
-        alert('Password owner disimpan di browser. Selanjutnya gunakan untuk login.');
-        hideOwnerSetup();
-        showOwnerLogin();
-      });
-      cancelOwnerSetup && cancelOwnerSetup.addEventListener('click', ()=>{ hideOwnerSetup(); });
-
-      // Owner login: verify password
-      doOwnerLoginBtn && doOwnerLoginBtn.addEventListener('click', async ()=>{
-        const p = document.getElementById('ownerLoginPass').value || '';
-        const stored = localStorage.getItem('owner_hash');
-        if(!stored){ alert('Owner belum diset.'); hideOwnerLogin(); showOwnerSetup(); return; }
-        const h = await hashPassword(p);
-        if(h === stored){
-          // set short-lived session flag (cleared when browser storage cleared)
-          localStorage.setItem('owner_session','1');
-          hideOwnerLogin();
-          // open admin
-          showAdminModal();
-          adminContent.style.display = 'block';
-          renderOrders();
-        } else { alert('Password salah.'); }
-      });
-      cancelOwnerLogin && cancelOwnerLogin.addEventListener('click', ()=>{ hideOwnerLogin(); });
-
-      closeAdmin && closeAdmin.addEventListener('click', hideAdminModal);
-
-      // submit order -> save to localStorage and redirect to payment view
+      // buyer buttons
+      const buyBtn = document.getElementById('buyBtn');
+      const buyBtn2 = document.getElementById('buyBtn2');
+      const cancel = document.getElementById('cancel');
       const submitOrderBtn = document.getElementById('submitOrder');
+
+      buyBtn && buyBtn.addEventListener('click', ()=> show(document.getElementById('modal')) );
+      buyBtn2 && buyBtn2.addEventListener('click', ()=> show(document.getElementById('modal')) );
+      cancel && cancel.addEventListener('click', ()=> hide(document.getElementById('modal')) );
+
+      // load brand photo from Firestore (config doc)
+      async function loadBrandPhoto(){
+        try{
+          const docRef = db.collection('config').doc('brand');
+          const doc = await docRef.get();
+          if(doc.exists){ const data = doc.data(); if(data && data.imageUrl){ brandPhoto.src = data.imageUrl; miniPhoto.src = data.imageUrl; miniPhoto.style.display='block'; miniPlaceholder.style.display='none'; }}
+        }catch(e){ console.error('error loadBrandPhoto', e); }
+      }
+      loadBrandPhoto();
+
+      // open Admin -> require owner login
+      openAdmin.addEventListener('click', async ()=>{
+        const user = auth.currentUser;
+        if(user){ // already logged in
+          show(adminModal); adminContent.style.display='block'; fetchOrders(); return;
+        }
+        // show owner login modal
+        show(ownerLoginModal);
+      });
+
+      cancelOwnerLogin.addEventListener('click', ()=> hide(ownerLoginModal));
+
+      // owner login
+      doOwnerLoginBtn.addEventListener('click', async ()=>{
+        const email = document.getElementById('ownerEmail').value.trim();
+        const pass = document.getElementById('ownerPassword').value;
+        if(!email || !pass){ alert('Masukkan email & password owner'); return; }
+        try{
+          await auth.signInWithEmailAndPassword(email, pass);
+          hide(ownerLoginModal);
+          show(adminModal); adminContent.style.display='block';
+          fetchOrders();
+        }catch(err){
+          console.error(err); alert('Login gagal: '+ err.message + '
+Pastikan akun owner dibuat di Firebase Console (Authentication > Users)');
+        }
+      });
+
+      // logout
+      logoutBtn.addEventListener('click', async ()=>{ await auth.signOut(); hide(adminModal); adminContent.style.display='none'; alert('Logout berhasil'); });
+
+      closeAdmin.addEventListener('click', ()=>{ hide(adminModal); adminContent.style.display='none'; });
+
+      // upload brand photo to Firebase Storage and save URL in Firestore config.doc
+      saveBrandPhotoBtn.addEventListener('click', async ()=>{
+        const user = auth.currentUser; if(!user){ alert('Akses ditolak. Login owner diperlukan.'); return; }
+        const file = adminPhotoInput.files[0]; if(!file){ alert('Pilih file terlebih dahulu'); return; }
+        try{
+          const path = 'brand/' + Date.now() + '_' + file.name.replace(/[^a-z0-9.\-]/gi,'_');
+          const snap = await storage.ref(path).put(file);
+          const url = await snap.ref.getDownloadURL();
+          // save to firestore
+          await db.collection('config').doc('brand').set({ imageUrl: url, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+          brandPhoto.src = url; miniPhoto.src = url; miniPhoto.style.display='block'; miniPlaceholder.style.display='none';
+          alert('Foto brand tersimpan dan sekarang tampil untuk semua pengunjung.');
+        }catch(err){ console.error(err); alert('Gagal upload: '+err.message); }
+      });
+
+      // create order -> save to Firestore collection 'orders'
       submitOrderBtn && submitOrderBtn.addEventListener('click', async ()=>{
         const name = document.getElementById('inpName').value.trim();
         const address = document.getElementById('inpAddress').value.trim();
         const size = document.getElementById('inpSize').value;
         const phone = document.getElementById('inpPhone').value.trim();
-        const qty = parseInt(document.getElementById('qty').value)||1;
-
+        const qty = parseInt(document.getElementById('qty').value) || 1;
         if(!name || !address || !phone){ alert('Lengkapi nama, alamat, dan nomor telepon.'); return; }
-
-        let photoData = localStorage.getItem('brand_photo_v1') || brandPhoto.src || '';
-        const id = 'ORD' + Date.now();
         const priceEach = parseInt(document.getElementById('displayPrice').innerText) || 250000;
         const total = priceEach * qty;
-
-        const order = { id, name, address, size, phone, qty, total, photo: photoData, status:'pending', createdAt: new Date().toISOString() };
-        saveOrder(order);
-        closeCheckout();
-        openPayment(order.id);
+        try{
+          const docRef = await db.collection('orders').add({ name, address, size, phone, qty, total, status:'pending', createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+          hide(document.getElementById('modal'));
+          // open payment UI — simple flow: show instructions and an upload for proof
+          openPaymentPage(docRef.id);
+        }catch(err){ console.error(err); alert('Gagal simpan pesanan: '+err.message); }
       });
 
-      function saveOrder(order){ const list = JSON.parse(localStorage.getItem('orders_v1')||'[]'); list.push(order); localStorage.setItem('orders_v1',JSON.stringify(list)); }
-
-      // simulated payment page
-      function openPayment(orderId){
+      // open payment UI
+      function openPaymentPage(orderId){
         const container = document.querySelector('.container');
-        container.innerHTML = `
-          <div style="padding:28px;color:var(--silver1)">
-            <h2>Pembayaran untuk ${orderId}</h2>
-            <p class="small">Silakan lakukan pembayaran sejumlah <strong>Rp <span id=payAmount></span></strong> ke rekening: <br><strong>BNI 123-456-789 a.n Phoenixborne Oath</strong></p>
-            <p class="small">Setelah transfer, unggah bukti transfer di bawah atau catat nomor transaksi, lalu klik Konfirmasi.</p>
-
-            <div style="background:var(--panel);padding:16px;border-radius:8px;margin-top:12px">
-              <div class="field"><label>Nomor Transaksi / Catatan</label><input id="trxId" type="text" /></div>
-              <div class="field"><label>Unggah bukti transfer (opsional)</label><input id="proof" type="file" accept="image/*" /></div>
-              <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button class="btn" id="backShop">Kembali</button><button class="btn btn-buy" id="confirmPay">Konfirmasi Pembayaran</button></div>
-            </div>
-
-            <div style="margin-top:18px" class="small">Catatan: ini demo front-end. Untuk verifikasi otomatis gunakan webhook dari gateway.</div>
-          </div>
-        `;
-
-        const order = getOrder(orderId);
-        document.getElementById('payAmount').innerText = order.total;
-
-        document.getElementById('backShop').addEventListener('click',()=>location.reload());
-
+        container.innerHTML = `\
+          <div style="padding:28px;color:var(--silver1)">\
+            <h2>Pembayaran untuk ${orderId}</h2>\
+            <p class="small">Silakan transfer sejumlah <strong>Rp <span id=payAmount></span></strong> ke rekening: <br><strong>BNI 123-456-789 a.n Phoenixborne Oath</strong></p>\
+            <p class="small">Setelah transfer, unggah bukti transfer di bawah atau catat nomor transaksi, lalu klik Konfirmasi.</p>\
+            <div style="background:var(--panel);padding:16px;border-radius:8px;margin-top:12px">\
+              <div class="field"><label>Nomor Transaksi / Catatan</label><input id="trxId" type="text" /></div>\
+              <div class="field"><label>Unggah bukti transfer (opsional)</label><input id="proof" type="file" accept="image/*" /></div>\
+              <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button class="btn" id="backShop">Kembali</button><button class="btn btn-buy" id="confirmPay">Konfirmasi Pembayaran</button></div>\
+            </div>\
+            <div style="margin-top:18px" class="small">Catatan: pembayaran manual memerlukan verifikasi owner dari panel Admin.</div>\
+          </div>`;
+        // fill amount from firestore
+        db.collection('orders').doc(orderId).get().then(doc => { if(doc.exists){ document.getElementById('payAmount').innerText = doc.data().total; }});
+        document.getElementById('backShop').addEventListener('click', ()=> location.reload() );
         document.getElementById('confirmPay').addEventListener('click', async ()=>{
           const trx = document.getElementById('trxId').value.trim();
           const proofFile = document.getElementById('proof').files[0];
-          let proofData = '';
-          if(proofFile){ proofData = await fileToDataURL(proofFile); }
-          markOrderPaid(orderId, trx, proofData);
-          container.innerHTML = `<div style="padding:28px;color:var(--silver1)"><h2>Terima kasih! Pesanan Anda (${orderId}) tercatat.</h2><p class="small">Kami akan memverifikasi pembayaran Anda. Anda dapat menutup halaman ini.</p></div>`;
+          let proofUrl = '';
+          if(proofFile){
+            const path = 'proofs/' + orderId + '_' + Date.now() + '_' + proofFile.name.replace(/[^a-z0-9.\-]/gi,'_');
+            const snap = await storage.ref(path).put(proofFile);
+            proofUrl = await snap.ref.getDownloadURL();
+          }
+          await db.collection('orders').doc(orderId).update({ status:'paid_pending', trx:trx||'', proofUrl:proofUrl, paidAt: firebase.firestore.FieldValue.serverTimestamp() });
+          document.querySelector('.container').innerHTML = `<div style="padding:28px;color:var(--silver1)"><h2>Terima kasih — Bukti dikirim.</h2><p class="small">Owner akan memverifikasi pembayaran Anda.</p></div>`;
         });
       }
 
-      function getOrder(id){ const list = JSON.parse(localStorage.getItem('orders_v1')||'[]'); return list.find(o=>o.id===id); }
-      function markOrderPaid(id, trx, proofData){ const list = JSON.parse(localStorage.getItem('orders_v1')||'[]'); const idx = list.findIndex(o=>o.id===id); if(idx===-1) return; list[idx].status='paid'; list[idx].trx=trx||''; if(proofData) list[idx].proof=proofData; list[idx].paidAt=new Date().toISOString(); localStorage.setItem('orders_v1',JSON.stringify(list)); }
-
-      // render orders
-      function renderOrders(){
-        const list = JSON.parse(localStorage.getItem('orders_v1')||'[]');
-        ordersTable.innerHTML='';
-        if(!list.length){ ordersTable.innerHTML = '<tr><td colspan="9" class="small">Belum ada pesanan.</td></tr>'; return; }
-        list.slice().reverse().forEach(o=>{
-          const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td>${o.id}</td>
-            <td>${escapeHtml(o.name)}</td>
-            <td style="max-width:200px">${escapeHtml(o.address)}</td>
-            <td>${o.size}</td>
-            <td>${o.qty}</td>
-            <td>${escapeHtml(o.phone)}</td>
-            <td>Rp ${o.total}</td>
-            <td class="${o.status==='paid'?'status-paid':'status-unpaid'}">${o.status}</td>
-            <td>
-              ${o.status!=='paid'?`<button class='btn' data-id='${o.id}' data-action='markPaid'>Tandai Lunas</button>`:''}
-              <button class='btn' data-id='${o.id}' data-action='view'>Lihat</button>
-            </td>
-          `;
-          ordersTable.appendChild(tr);
-        });
-
-        ordersTable.querySelectorAll('button').forEach(b=>b.addEventListener('click',(e)=>{
-          const id = e.currentTarget.dataset.id; const action = e.currentTarget.dataset.action;
-          if(action==='markPaid'){ if(confirm('Tandai pesanan ini sebagai LUNAS?')){ markOrderPaid(id,'manual-admin',''); renderOrders(); } }
-          else if(action==='view'){ const o = getOrder(id); showOrderDetail(o); }
-        }));
+      // fetch orders for admin
+      async function fetchOrders(){
+        ordersTable.innerHTML = '<tr><td colspan="9" class="small">Memuat...</td></tr>';
+        try{
+          const snapshot = await db.collection('orders').orderBy('createdAt','desc').get();
+          const rows = [];
+          snapshot.forEach(doc => { const o = doc.data(); o.id = doc.id; rows.push(o); });
+          if(!rows.length){ ordersTable.innerHTML = '<tr><td colspan="9" class="small">Belum ada pesanan.</td></tr>'; return; }
+          ordersTable.innerHTML = '';
+          rows.forEach(o => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `\
+              <td>${o.id}</td>\
+              <td>${escapeHtml(o.name||'')}</td>\
+              <td style="max-width:200px">${escapeHtml(o.address||'')}</td>\
+              <td>${o.size||''}</td>\
+              <td>${o.qty||1}</td>\
+              <td>${escapeHtml(o.phone||'')}</td>\
+              <td>Rp ${o.total||0}</td>\
+              <td class="${o.status==='paid'?'status-paid':'status-unpaid'}">${o.status||''}</td>\
+              <td>\
+                ${o.status!=='paid'?`<button class='btn' data-id='${o.id}' data-action='markPaid'>Tandai Lunas</button>`:''}\
+                <button class='btn' data-id='${o.id}' data-action='view'>Lihat</button>\
+              </td>`;
+            ordersTable.appendChild(tr);
+          });
+          // attach actions
+          ordersTable.querySelectorAll('button').forEach(b=> b.addEventListener('click', async (e)=>{
+            const id = e.currentTarget.dataset.id; const action = e.currentTarget.dataset.action;
+            if(action === 'markPaid'){
+              if(!confirm('Tandai pesanan ini sebagai LUNAS?')) return;
+              await db.collection('orders').doc(id).update({ status:'paid', verifiedAt: firebase.firestore.FieldValue.serverTimestamp() });
+              fetchOrders();
+            }else if(action === 'view'){
+              const doc = await db.collection('orders').doc(id).get(); const o = doc.data();
+              showOrderDetail(Object.assign({id:doc.id}, o));
+            }
+          }));
+        }catch(err){ console.error(err); ordersTable.innerHTML = '<tr><td colspan="9" class="small">Gagal memuat pesanan</td></tr>'; }
       }
 
       function showOrderDetail(o){
-        const html = `
-          <div style="padding:12px;background:#060606;border-radius:8px;margin-top:10px">
-            <div><strong>ID:</strong> ${o.id}</div>
-            <div><strong>Nama:</strong> ${escapeHtml(o.name)}</div>
-            <div><strong>Alamat:</strong> ${escapeHtml(o.address)}</div>
-            <div><strong>HP:</strong> ${escapeHtml(o.phone)}</div>
-            <div><strong>Status:</strong> ${o.status}</div>
-            <div style="margin-top:8px">${o.proof?`<div><strong>Bukti:</strong><br><img src='${o.proof}' style='max-width:260px;border-radius:6px;margin-top:8px' /></div>`:''}</div>
-            <div style="margin-top:8px"><button class='btn' id='markPaidNow'>Tandai Lunas</button></div>
-          </div>
-        `;
-        const wrapper = document.createElement('div'); wrapper.innerHTML = html;
+        const wrapper = document.createElement('div');
+        wrapper.style.padding = '12px'; wrapper.style.background = '#060606'; wrapper.style.borderRadius='8px'; wrapper.style.marginTop='10px';
+        wrapper.innerHTML = `\
+          <div><strong>ID:</strong> ${o.id}</div>\
+          <div><strong>Nama:</strong> ${escapeHtml(o.name||'')}</div>\
+          <div><strong>Alamat:</strong> ${escapeHtml(o.address||'')}</div>\
+          <div><strong>HP:</strong> ${escapeHtml(o.phone||'')}</div>\
+          <div><strong>Status:</strong> ${o.status||''}</div>\
+          <div style="margin-top:8px">${o.proofUrl?`<div><strong>Bukti:</strong><br><img src='${o.proofUrl}' style='max-width:260px;border-radius:6px;margin-top:8px' /></div>`:''}</div>\
+          <div style="margin-top:8px"><button class='btn' id='markPaidNow'>Tandai Lunas</button></div>`;
         adminContent.appendChild(wrapper);
-        wrapper.querySelector('#markPaidNow').addEventListener('click',()=>{ if(confirm('Tandai lunas?')){ markOrderPaid(o.id,'admin-confirm',''); renderOrders(); wrapper.remove(); }});
+        wrapper.querySelector('#markPaidNow').addEventListener('click', async ()=>{ if(confirm('Tandai lunas?')){ await db.collection('orders').doc(o.id).update({ status:'paid', verifiedAt: firebase.firestore.FieldValue.serverTimestamp() }); fetchOrders(); wrapper.remove(); } });
       }
 
-      exportCsvBtn && exportCsvBtn.addEventListener('click',()=>{
-        const list = JSON.parse(localStorage.getItem('orders_v1')||'[]');
-        if(!list.length){ alert('Tidak ada data'); return; }
-        const rows = ['id,name,address,phone,size,qty,total,status,createdAt'];
-        list.forEach(o=>rows.push([o.id,escapeCsv(o.name),escapeCsv(o.address),o.phone,o.size,o.qty,o.total,o.status,o.createdAt].join(',')));
-        const blob = new Blob([rows.join('\n')],{type:'text/csv'});
-        const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download='orders.csv'; a.click(); URL.revokeObjectURL(url);
+      // export CSV -- fetch from Firestore
+      exportCsvBtn.addEventListener('click', async ()=>{
+        try{
+          const snapshot = await db.collection('orders').orderBy('createdAt','desc').get();
+          const rows = ['id,name,address,phone,size,qty,total,status,createdAt'];
+          snapshot.forEach(doc => { const o = doc.data(); rows.push([doc.id, escapeCsv(o.name||''), escapeCsv(o.address||''), o.phone||'', o.size||'', o.qty||'', o.total||'', o.status||'', o.createdAt?o.createdAt.toDate().toISOString():''].join(',')); });
+          const blob = new Blob([rows.join('
+')],{type:'text/csv'}); const url = URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='orders.csv'; a.click(); URL.revokeObjectURL(url);
+        }catch(err){ console.error(err); alert('Gagal export: '+err.message); }
       });
-
-      function escapeHtml(s){ return (s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
-      function escapeCsv(s){ return '"'+(s||'').replaceAll('"','""')+'"'; }
-
-      // clear / reset demo
-      document.getElementById('clearBtn').addEventListener('click',()=>{ if(confirm('Reset demo (hapus foto mini & qty)?')){ localStorage.removeItem('orders_v1'); location.reload(); }});
 
       // helpers
-      function fileToDataURL(file){ return new Promise((res,rej)=>{ const r = new FileReader(); r.onload = ()=>res(r.result); r.onerror=rej; r.readAsDataURL(file); }) }
+      function escapeHtml(s){ return (s||'').toString().replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
+      function escapeCsv(s){ return '"'+(s||'').toString().replaceAll('"','""')+'"'; }
+      function fileToDataURL(file){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(file); }) }
 
-      // ADMIN: handle brand photo upload (seller only) - only available after owner login
-      saveBrandPhotoBtn && saveBrandPhotoBtn.addEventListener('click', async ()=>{
-        // check owner logged in by verifying owner_session flag
-        const session = localStorage.getItem('owner_session');
-        if(!session){ alert('Akses ditolak. Login owner diperlukan.'); hideOwnerLogin(); showOwnerLogin(); return; }
-        const f = document.getElementById('adminPhotoInput').files[0];
-        if(!f){ alert('Pilih file terlebih dahulu'); return; }
-        const data = await fileToDataURL(f);
-        localStorage.setItem('brand_photo_v1', data);
-        brandPhoto.src = data; miniPhoto.src = data; miniPhoto.style.display='block'; miniPlaceholder.style.display='none';
-        alert('Foto brand tersimpan.');
-      });
-
-      // create a simple owner_session after successful login to avoid re-login during the session
-      // set owner_session when owner successfully logs in
-      // Update: owner session is set in doOwnerLoginBtn handler above when login success
-
-      // load saved brand photo if exists
-      const p = localStorage.getItem('brand_photo_v1');
-      if(p){ brandPhoto.src = p; miniPhoto.src = p; miniPhoto.style.display='block'; miniPlaceholder.style.display='none'; }
+      // on auth state changed: hide login modal if logged in
+      auth.onAuthStateChanged(user => { if(user){ hide(ownerLoginModal); } });
 
     }); // end DOMContentLoaded
   </script>
+
+  <!-- Instructions -->
+  <div style="position:fixed;right:12px;bottom:12px;z-index:9999;background:#0b0b0b;border:1px solid rgba(255,255,255,0.04);padding:10px;border-radius:8px;font-size:12px;color:var(--silver2)">
+    <strong>Petunjuk singkat:</strong>
+    <ol style="padding-left:18px;margin:6px 0">
+      <li>Buat project di Firebase console.</li>
+      <li>Aktifkan: Authentication (Email/Password), Firestore (native mode), Storage.</li>
+      <li>Ganti variabel <code>firebaseConfig</code> di atas dengan kredensial project Anda.</li>
+      <li>Tambahkan user Owner di Firebase Console → Authentication → Add user (masukkan email & password owner).</li>
+      <li>Hosting: upload file ini ke hosting (Firebase Hosting / Netlify / Vercel) agar semua pengunjung melihat foto yang tersimpan di Storage.</li>
+    </ol>
+    <div style="margin-top:6px;color:var(--silver1)">Butuh saya bantu pasang Firebase (saya bisa kirim langkah-langkah lengkap atau kode yang disesuaikan).</div>
+  </div>
+</body>
+</html>
