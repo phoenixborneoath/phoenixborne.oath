@@ -421,12 +421,10 @@ Pastikan akun owner dibuat di Firebase Console (Authentication > Users)');
 
  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  // --- KONFIG SUPABASE ---
   const supabaseUrl = "https://cbbcmvgya...supabase.co";      // URL kamu
   const supabaseKey = "sb_publishable_Ja1DPAjTxp3H3HVB-...";  // key kamu
   const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-  // --- LOAD FOTO BRAND DARI TABEL config ---
   async function loadBrandImage() {
     try {
       const { data, error } = await supabaseClient
@@ -454,7 +452,6 @@ Pastikan akun owner dibuat di Firebase Console (Authentication > Users)');
     }
   }
 
-  // --- EVENT KETIKA TOMBOL BELI DI KLIK ---
   function setupBuyButton() {
     const btnBuy = document.getElementById("btnBuy");
     if (!btnBuy) {
@@ -480,7 +477,6 @@ Pastikan akun owner dibuat di Firebase Console (Authentication > Users)');
       const price = 250000;        // harga per pcs
       const total = qty * price;
 
-      // simpan ke tabel "orders"
       const { data, error } = await supabaseClient
         .from("orders")
         .insert([
@@ -501,7 +497,6 @@ Pastikan akun owner dibuat di Firebase Console (Authentication > Users)');
         return;
       }
 
-      // redirect ke WhatsApp kamu
       const waMessage = encodeURIComponent(
         `Halo, saya sudah order Phoenixborne Oath.\n\n` +
         `Nama: ${name}\n` +
@@ -512,13 +507,11 @@ Pastikan akun owner dibuat di Firebase Console (Authentication > Users)');
         `Total: Rp ${total.toLocaleString("id-ID")}`
       );
 
-      // GANTI 62XXXXXXXXXXX DENGAN NOMOR WA KAMU
       window.location.href =
-        `https://wa.me/62XXXXXXXXXXX?text=${waMessage}`;
+        `https://wa.me/62895809679191?text=${waMessage}`;
     });
   }
 
-  // --- JALANKAN SETELAH HALAMAN LOADED ---
   window.addEventListener("DOMContentLoaded", () => {
     loadBrandImage();
     setupBuyButton();
