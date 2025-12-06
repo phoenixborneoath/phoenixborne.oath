@@ -67,7 +67,7 @@
 
           <div style="margin-top:14px;display:flex;gap:8px;align-items:center">
             <div class="small">Gambar produk hanya dapat diubah oleh owner melalui panel Admin.</div>
-            <button class="btn btn-buy" id="buyBtn">Beli Sekarang</button>
+            <button class="btn-buy" id="btnBuy">Beli Sekarang</button>
           </div>
 
           <div class="small" style="margin-top:10px">Stok terbatas. Ketentuan ukuran jangan diubah setelah checkout.</div>
@@ -421,25 +421,27 @@ Pastikan akun owner dibuat di Firebase Console (Authentication > Users)');
 
  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  // KONFIG SUPABASE
-  const supabaseUrl = "https://cbbcmvgyascgzfquyrni.supabase.co";
-  const supabaseKey = "sb_publishable_Ja1DPAjTxp3H3VB-fpl9cA_BiuIoXO6";
-  const sb = supabase.createClient(supabaseUrl, supabaseKey);
+  // --- KONFIG SUPABASE ---
+  const supabaseUrl = "https://cbbcmvgya...supabase.co";      // URL kamu
+  const supabaseKey = "sb_publishable_Ja1DPAjTxp3H3HVB-...";  // key kamu
+  const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
+  // --- LOAD FOTO BRAND DARI TABEL config ---
   async function loadBrandImage() {
     try {
-      const { data, error } = await sb
+      const { data, error } = await supabaseClient
         .from("config")
         .select("imageurl")
         .eq("id", "brand")
         .single();
 
       if (error) {
-        console.error("Supabase error:", error);
+        console.error("Gagal mengambil brand image:", error);
         return;
       }
+
       if (!data || !data.imageurl) {
-        console.warn("Tidak ada imageurl di row 'brand'");
+        console.warn('Tidak ada imageurl di row "brand"');
         return;
       }
 
@@ -452,45 +454,76 @@ Pastikan akun owner dibuat di Firebase Console (Authentication > Users)');
     }
   }
 
-const btnBuy = document.getElementById('btnBuy');
+  // --- EVENT KETIKA TOMBOL BELI DI KLIK ---
+  function setupBuyButton() {
+    const btnBuy = document.getElementById("btnBuy");
+    if (!btnBuy) {
+      console.warn("btnBuy tidak ditemukan di HTML");
+      return;
+    }
 
-btnBuy.addEventListener('click', async () => {
-  const name = document.getElementById('buyerName').value.trim();
-  const address = document.getElementById('buyerAddress').value.trim();
-  const phone = document.getElementById('buyerPhone').value.trim();
-  const size = document.getElementById('buyerSize').value;
-  const qty = parseInt(document.getElementById('buyerQty').value);
+    btnBuy.addEventListener("click", async () => {
+      const name    = document.getElementById("buyerName").value.trim();
+      const address = document.getElementById("buyerAddress").value.trim();
+      const phone   = document.getElementById("buyerPhone").value.trim();
+      const size    = document.getElementById("buyerSize").value;
+      const qty     = parseInt(
+        document.getElementById("buyerQty").value || "1",
+        10
+      );
 
-  if (!name || !address || !phone) {
-    alert('Lengkapi semua data terlebih dahulu!');
-    return;
-  }
-
-  const price = 250000;
-  const total = qty * price;
-
-  const { data, error } = await supabase
-    .from('orders')
-    .insert([
-      {
-        name: name,
-        address: address,
-        phone: phone,
-        size: size,
-        qty: qty,
-        total: total,
-        status: 'pending'
+      if (!name || !address || !phone) {
+        alert("Lengkapi semua data terlebih dahulu!");
+        return;
       }
-    ]);
 
-  if (error) {
-    alert('Gagal menyimpan pesanan!');
-    console.error(error);
-  } else {
-    alert('Pesanan berhasil dikirim!');
-    window.location.href = "https://wa.me/62XXXXXXXXXX?text=Halo saya sudah order di Phoenixborne Oath";
+      const price = 250000;        // harga per pcs
+      const total = qty * price;
+
+      // simpan ke tabel "orders"
+      const { data, error } = await supabaseClient
+        .from("orders")
+        .insert([
+          {
+            name: name,
+            address: address,
+            phone: phone,
+            size: size,
+            qty: qty,
+            total: total,
+            status: "pending",
+          },
+        ]);
+
+      if (error) {
+        console.error("Supabase insert error:", error);
+        alert("Gagal menyimpan pesanan. Coba lagi ya.");
+        return;
+      }
+
+      // redirect ke WhatsApp kamu
+      const waMessage = encodeURIComponent(
+        `Halo, saya sudah order Phoenixborne Oath.\n\n` +
+        `Nama: ${name}\n` +
+        `Alamat: ${address}\n` +
+        `No HP: ${phone}\n` +
+        `Ukuran: ${size}\n` +
+        `Qty: ${qty}\n` +
+        `Total: Rp ${total.toLocaleString("id-ID")}`
+      );
+
+      // GANTI 62XXXXXXXXXXX DENGAN NOMOR WA KAMU
+      window.location.href =
+        `https://wa.me/62XXXXXXXXXXX?text=${waMessage}`;
+    });
   }
-});
+
+  // --- JALANKAN SETELAH HALAMAN LOADED ---
+  window.addEventListener("DOMContentLoaded", () => {
+    loadBrandImage();
+    setupBuyButton();
+  });
 </script>
+
 </body>
 </html>
