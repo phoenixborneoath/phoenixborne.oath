@@ -52,9 +52,12 @@
     <main class="layout">
       <section class="card">
         <div class="photo" id="photoWrap">
-         <img id="brandPhoto" src="" 
-     alt="Brand Photo"
-     style="width:100%; height:auto; border-radius:10px; object-fit:cover;">
+         <img
+  id="brandPhoto"
+  src=""
+  alt="Brand Photo"
+  style="width:100%; height:auto; border-radius:10px; object-fit:cover;"
+/>
         </div>
 
         <div class="meta">
@@ -412,47 +415,71 @@ Pastikan akun owner dibuat di Firebase Console (Authentication > Users)');
       auth.onAuthStateChanged(user => { if(user){ hide(ownerLoginModal); } });
 
     }); // end DOMContentLoaded
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  // --- KONFIG SUPABASE ---
+  // === KONFIG SUPABASE ===
   const supabaseUrl = "https://cbbcmvgyascgzfqvyrni.supabase.co"; // punyamu
   const supabaseKey = "sb_publishable_Ja1DPAjTxp3H3HVB-fp1gCA_BiuIoXO6"; // punyamu
   const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-  // --- LOAD FOTO BRAND DARI TABEL config ---
+  // === LOAD FOTO BRAND DARI TABEL config ===
   async function loadBrandImage() {
+    const debug = document.getElementById("debugBox");
+    if (debug) debug.textContent = "Memuat gambar brand...";
+
     try {
       const { data, error } = await supabaseClient
         .from("config")
         .select("imageurl")
         .eq("id", "brand")
-        .single(); // karena kita cuma ambil 1 row
+        .single();
 
       if (error) {
-        console.error("Error ambil gambar brand:", error);
+        console.error("Error Supabase:", error);
+        if (debug) debug.textContent = "Error Supabase: " + error.message;
         return;
       }
 
       if (!data || !data.imageurl) {
-        console.warn('Tidak ada nilai "imageurl" untuk id = "brand"');
+        console.warn("Tidak ada data.imageurl untuk id=brand", data);
+        if (debug) debug.textContent = "Tidak ada imageurl untuk id=brand";
         return;
       }
 
       const img = document.getElementById("brandPhoto");
       if (!img) {
-        console.warn('Element <img id="brandPhoto"> tidak ditemukan di HTML');
+        console.warn("Element #brandPhoto tidak ditemukan");
+        if (debug) debug.textContent = "Element #brandPhoto tidak ditemukan";
         return;
       }
 
       img.src = data.imageurl;
+      if (debug) debug.textContent = "Berhasil load gambar ✔";
     } catch (err) {
-      console.error("Error tak terduga saat loadBrandImage:", err);
+      console.error("Error tak terduga:", err);
+      if (debug) debug.textContent = "Error tak terduga: " + String(err);
     }
   }
 
-  // Jalankan setelah halaman siap
-  document.addEventListener("DOMContentLoaded", loadBrandImage);
+  // === DEBUG KECIL DI BAWAH FOTO (opsional) ===
+  document.addEventListener("DOMContentLoaded", () => {
+    // buat kotak debug kecil supaya kita bisa lihat error tanpa console
+    let dbg = document.getElementById("debugBox");
+    if (!dbg) {
+      dbg = document.createElement("pre");
+      dbg.id = "debugBox";
+      dbg.style.fontSize = "10px";
+      dbg.style.color = "#888";
+      dbg.style.whiteSpace = "pre-wrap";
+      dbg.style.marginTop = "8px";
+      dbg.textContent = "Debug: siap…";
+      // taruh di bawah gambar
+      const photoWrap = document.getElementById("photoWrap") || document.body;
+      photoWrap.appendChild(dbg);
+    }
+
+    loadBrandImage();
+  });
 </script>
-  
 </body>
 </html>
