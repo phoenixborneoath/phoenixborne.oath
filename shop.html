@@ -415,21 +415,20 @@ Pastikan akun owner dibuat di Firebase Console (Authentication > Users)');
   </script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  // ==== KONFIG SUPABASE ==== 
-  // (pakai URL & KEY yang kemarin SUDAH jalan waktu gambar muncul)
-  const SUPABASE_URL = "https://cbbcmvgyascgzfquyrni.supabase.co";      // punyamu
-  const SUPABASE_ANON_KEY = "sb_publishable_Ja1DPAjTxp3H3HVB-fpl9cA_BiuIoXO6"; // punyamu
+  // ==== KONFIG SUPABASE ====
+  const supabaseUrl = "https://cbbcmvgyascgzfquyrni.supabase.co"; // URL project kamu
+  const supabaseKey = "sb_publishable_Ja1DPAjTxp3H3HVB-fpl9cA_BiuIoXO6"; // key kamu
 
-  // client Supabase
-  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  // client Supabase (pakai nama yang sederhana)
+  const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-  // ==== LOAD FOTO BRAND DARI TABEL CONFIG ====
+  // ==== 1. AMBIL URL FOTO BRAND DARI TABEL CONFIG ====
   async function loadBrandImage() {
     try {
-      const { data, error } = await sb
-        .from("config")
-        .select("imageUrl")     // nama kolom di Supabase: imageUrl (U besar)
-        .eq("id", "brand")      // row dengan id = "brand"
+      const { data, error } = await supabaseClient
+        .from("config")        // nama tabel
+        .select("imageUrl")    // nama kolom
+        .eq("id", "brand")     // row dengan id = 'brand'
         .single();
 
       if (error) {
@@ -452,7 +451,7 @@ Pastikan akun owner dibuat di Firebase Console (Authentication > Users)');
     }
   }
 
-  // ==== AKTIFKAN TOMBOL BELI SEKARANG (sementara test alert) ====
+  // ==== 2. AKTIFKAN TOMBOL BELI SEKARANG (sementara test alert) ====
   function setupBuyButton() {
     const btn = document.getElementById("btnBuy");
     if (!btn) return;
@@ -462,11 +461,9 @@ Pastikan akun owner dibuat di Firebase Console (Authentication > Users)');
     });
   }
 
-  // ==== JALAN OTOMATIS SAAT HALAMAN SIAP ====
-  window.addEventListener("DOMContentLoaded", () => {
-    loadBrandImage();
-    setupBuyButton();
-  });
+  // ==== JALANKAN BEGITU SCRIPT DILOAD ====
+  loadBrandImage();   // muat foto dari Supabase
+  setupBuyButton();   // hidupkan tombol
 </script>
 </body>
 </html>
