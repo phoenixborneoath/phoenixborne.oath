@@ -413,57 +413,46 @@ Pastikan akun owner dibuat di Firebase Console (Authentication > Users)');
 
     }); // end DOMContentLoaded
   </script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  // ==== KONFIG SUPABASE ====
-  const supabaseUrl = "https://cbbcmvgyascgzfquyrni.supabase.co"; // URL project kamu
-  const supabaseKey = "sb_publishable_Ja1DPAjTxp3H3HVB-fpl9cA_BiuIoXO6"; // key kamu
-
-  // client Supabase (pakai nama yang sederhana)
+  // --- KONFIG SUPABASE ---
+  const supabaseUrl = "https://cbbcmvgyascgzfqvyrni.supabase.co"; // punyamu
+  const supabaseKey = "sb_publishable_Ja1DPAjTxp3H3HVB-fp1gCA_BiuIoXO6"; // punyamu
   const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
-  // ==== 1. AMBIL URL FOTO BRAND DARI TABEL CONFIG ====
+  // --- LOAD FOTO BRAND DARI TABEL config ---
   async function loadBrandImage() {
     try {
       const { data, error } = await supabaseClient
-        .from("config")        // nama tabel
-        .select("imageurl")    // nama kolom
-        .eq("id", "brand")     // row dengan id = 'brand'
-        .single();
+        .from("config")
+        .select("imageurl")
+        .eq("id", "brand")
+        .single(); // karena kita cuma ambil 1 row
 
       if (error) {
-        console.error("Gagal memuat gambar brand:", error);
+        console.error("Error ambil gambar brand:", error);
         return;
       }
 
       if (!data || !data.imageurl) {
-        console.warn('Tidak ada imageurl di row config.id = "brand"');
+        console.warn('Tidak ada nilai "imageurl" untuk id = "brand"');
         return;
       }
 
       const img = document.getElementById("brandPhoto");
-      if (img) {
-        img.src = data.imageurl;
-        img.alt = "Brand Photo";
+      if (!img) {
+        console.warn('Element <img id="brandPhoto"> tidak ditemukan di HTML');
+        return;
       }
+
+      img.src = data.imageurl;
     } catch (err) {
-      console.error("Error tak terduga saat load brand image:", err);
+      console.error("Error tak terduga saat loadBrandImage:", err);
     }
   }
 
-  // ==== 2. AKTIFKAN TOMBOL BELI SEKARANG (sementara test alert) ====
-  function setupBuyButton() {
-    const btn = document.getElementById("btnBuy");
-    if (!btn) return;
-
-    btn.addEventListener("click", () => {
-      alert("Tombol Beli Sekarang KEPENCET ✅ (ini baru test)");
-    });
-  }
-
-  // ==== JALANKAN BEGITU SCRIPT DILOAD ====
-  loadBrandImage();   // muat foto dari Supabase
-  setupBuyButton();   // hidupkan tombol
+  // Jalankan setelah halaman siap
+  document.addEventListener("DOMContentLoaded", loadBrandImage);
 </script>
+  
 </body>
 </html>
