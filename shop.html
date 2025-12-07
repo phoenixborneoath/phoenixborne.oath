@@ -413,40 +413,60 @@ Pastikan akun owner dibuat di Firebase Console (Authentication > Users)');
 
     }); // end DOMContentLoaded
   </script>
- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  // KONFIG SUPABASE
-  const supabaseUrl = "https://cbbcmvgyascgzfquyrni.supabase.co";
-  const supabaseKey = "sb_publishable_Ja1DPAjTxp3H3VB-fpl9cA_BiuIoXO6";
-  const sb = supabase.createClient(supabaseUrl, supabaseKey);
+  // ==== KONFIG SUPABASE ==== 
+  // (pakai URL & KEY yang kemarin SUDAH jalan waktu gambar muncul)
+  const SUPABASE_URL = "https://cbbcmvgyascgzfquyrni.supabase.co";      // punyamu
+  const SUPABASE_ANON_KEY = "sb_publishable_Ja1DPAjTxp3H3HVB-fpl9cA_BiuIoXO6"; // punyamu
 
+  // client Supabase
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // ==== LOAD FOTO BRAND DARI TABEL CONFIG ====
   async function loadBrandImage() {
     try {
       const { data, error } = await sb
         .from("config")
-        .select("imageurl")
-        .eq("id", "brand")
+        .select("imageUrl")     // nama kolom di Supabase: imageUrl (U besar)
+        .eq("id", "brand")      // row dengan id = "brand"
         .single();
 
       if (error) {
-        console.error("Supabase error:", error);
+        console.error("Gagal memuat gambar brand:", error);
         return;
       }
-      if (!data || !data.imageurl) {
-        console.warn("Tidak ada imageurl di row 'brand'");
+
+      if (!data || !data.imageUrl) {
+        console.warn('Tidak ada imageUrl di row config.id = "brand"');
         return;
       }
 
       const img = document.getElementById("brandPhoto");
       if (img) {
-        img.src = data.imageurl;
+        img.src = data.imageUrl;
+        img.alt = "Brand Photo";
       }
     } catch (err) {
-      console.error("Fetch error:", err);
+      console.error("Error tak terduga saat load brand image:", err);
     }
   }
 
-  loadBrandImage();
+  // ==== AKTIFKAN TOMBOL BELI SEKARANG (sementara test alert) ====
+  function setupBuyButton() {
+    const btn = document.getElementById("btnBuy");
+    if (!btn) return;
+
+    btn.addEventListener("click", () => {
+      alert("Tombol Beli Sekarang KEPENCET ✅ (ini baru test)");
+    });
+  }
+
+  // ==== JALAN OTOMATIS SAAT HALAMAN SIAP ====
+  window.addEventListener("DOMContentLoaded", () => {
+    loadBrandImage();
+    setupBuyButton();
+  });
 </script>
 </body>
 </html>
