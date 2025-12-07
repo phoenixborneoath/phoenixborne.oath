@@ -233,7 +233,7 @@
         try{
           const docRef = db.collection('config').doc('brand');
           const doc = await docRef.get();
-          if(doc.exists){ const data = doc.data(); if(data && data.imageUrl){ brandPhoto.src = data.imageUrl; miniPhoto.src = data.imageUrl; miniPhoto.style.display='block'; miniPlaceholder.style.display='none'; }}
+          if(doc.exists){ const data = doc.data(); if(data && data.imageurl){ brandPhoto.src = data.imageurl; miniPhoto.src = data.imageurl; miniPhoto.style.display='block'; miniPlaceholder.style.display='none'; }}
         }catch(e){ console.error('error loadBrandPhoto', e); }
       }
       loadBrandPhoto();
@@ -280,7 +280,7 @@ Pastikan akun owner dibuat di Firebase Console (Authentication > Users)');
           const snap = await storage.ref(path).put(file);
           const url = await snap.ref.getDownloadURL();
           // save to firestore
-          await db.collection('config').doc('brand').set({ imageUrl: url, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+          await db.collection('config').doc('brand').set({ imageurl: url, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
           brandPhoto.src = url; miniPhoto.src = url; miniPhoto.style.display='block'; miniPlaceholder.style.display='none';
           alert('Foto brand tersimpan dan sekarang tampil untuk semua pengunjung.');
         }catch(err){ console.error(err); alert('Gagal upload: '+err.message); }
@@ -427,7 +427,7 @@ Pastikan akun owner dibuat di Firebase Console (Authentication > Users)');
     try {
       const { data, error } = await supabaseClient
         .from("config")        // nama tabel
-        .select("imageUrl")    // nama kolom
+        .select("imageurl")    // nama kolom
         .eq("id", "brand")     // row dengan id = 'brand'
         .single();
 
@@ -436,14 +436,14 @@ Pastikan akun owner dibuat di Firebase Console (Authentication > Users)');
         return;
       }
 
-      if (!data || !data.imageUrl) {
-        console.warn('Tidak ada imageUrl di row config.id = "brand"');
+      if (!data || !data.imageurl) {
+        console.warn('Tidak ada imageurl di row config.id = "brand"');
         return;
       }
 
       const img = document.getElementById("brandPhoto");
       if (img) {
-        img.src = data.imageUrl;
+        img.src = data.imageurl;
         img.alt = "Brand Photo";
       }
     } catch (err) {
