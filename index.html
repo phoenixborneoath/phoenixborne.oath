@@ -372,7 +372,7 @@ header {
 
 /* Ensure images inside sections don't overflow */
 .section img { max-width: 100%; height: auto; display:block; }
-    /* PWA top install banner */
+   /* PWA top install banner (improved animation + reduced-motion) */
 .pwa-banner {
   --banner-bg: #0b0b0b;
   --banner-color: #fff;
@@ -390,38 +390,33 @@ header {
   color: var(--banner-color);
   z-index: 9999;
   box-shadow: 0 6px 24px rgba(0,0,0,0.45);
-  transform: translateY(-120%);
-  transition: transform 280ms cubic-bezier(.2,.8,.2,1), opacity 200ms ease;
+  transform: translateY(-110%);
   opacity: 0;
+  /* animation handled by transform/opacity for smoothness */
+  transition: transform 360ms cubic-bezier(.2,.8,.2,1), opacity 260ms ease;
   font-family: Inter, system-ui, -apple-system, sans-serif;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  will-change: transform, opacity;
 }
 
-/* show */
+/* visible state */
 .pwa-banner.show {
   transform: translateY(0);
   opacity: 1;
 }
 
-/* push content down when banner visible */
-body.pwa-banner-visible {
-  transition: padding-top 280ms cubic-bezier(.2,.8,.2,1);
-  padding-top: calc(var(--banner-height));
+/* reduced motion: avoid animations for users who prefer not to animate */
+@media (prefers-reduced-motion: reduce) {
+  .pwa-banner,
+  .pwa-banner.show {
+    transition: none;
+    transform: none;
+    opacity: 1;
+  }
 }
 
-/* layout */
-.pwa-banner .left {
-  display:flex;
-  align-items:center;
-  gap:10px;
-  flex: 1 1 auto;
-  min-width: 0;
-}
-.pwa-banner .logo { width:34px; height:34px; border-radius:999px; overflow:hidden; display:flex; align-items:center; justify-content:center; background:#000; flex-shrink:0; }
-.pwa-banner .logo img { width:100%; height:100%; object-fit:cover; display:block; }
-.pwa-banner .text .title { font-weight:700; font-size:0.86rem; letter-spacing:0.04em; }
-.pwa-banner .text .sub { font-size:0.75rem; color:rgba(255,255,255,0.9); }
-
-/* CTA button */
+/* CTA micro-interaction */
 .pwa-banner .cta {
   margin-left: 12px;
   background: linear-gradient(180deg,#ffd200,#f4b800);
@@ -432,13 +427,15 @@ body.pwa-banner-visible {
   font-weight:700;
   cursor:pointer;
   box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-  transition: transform 180ms ease;
+  transition: transform 160ms ease, box-shadow 160ms ease;
   flex-shrink:0;
+  transform-origin: center;
 }
-.pwa-banner .cta:active { transform: translateY(1px) }
+.pwa-banner .cta:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 10px 28px rgba(0,0,0,0.3); }
+.pwa-banner .cta:active { transform: translateY(0.5px) scale(0.998); }
 
-/* dismiss */
-.pwa-banner .dismiss { margin-left:8px; background:transparent; border:none; color:rgba(255,255,255,0.75); font-size:1.1rem; cursor:pointer; padding:6px; flex-shrink:0; }
+/* slightly reduce flicker by backface-visibility */
+.pwa-banner, .pwa-banner * { backface-visibility: hidden; -webkit-font-smoothing: antialiased; }
 
 /* responsive tweaks */
 @media (max-width:480px){
@@ -581,14 +578,16 @@ body.pwa-banner-visible {
 
   // Helper: hide banner & cleanup
   function hideBanner() {
-    if (banner) {
-      banner.classList.remove('show');
-      banner.setAttribute('aria-hidden', 'true');
-    }
+  if (banner) {
+    banner.classList.remove('show');
+    banner.setAttribute('aria-hidden','true');
+  }
+  // give animation time to finish then remove body padding (avoid jump)
+    setTimeout(() => {
     document.body.classList.remove('pwa-banner-visible');
     document.documentElement.style.removeProperty('--banner-height');
-  }
-
+  }, 380);
+}
   // If user previously dismissed, keep banner hidden immediately (no flicker)
   if (banner && localStorage.getItem('pwaBannerDismissed') === '1') {
     banner.classList.remove('show');
@@ -609,20 +608,28 @@ body.pwa-banner-visible {
   // Manage beforeinstallprompt
   let deferredPrompt = null;
   window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    window.__pwaDeferredPrompt = e; // optional exposure
+  e.preventDefault();
+  deferredPrompt = e;
+  window.__pwaDeferredPrompt = e; // optional
 
-    // Show banner
-    if (banner) {
-      const h = banner.offsetHeight || 56;
-      document.documentElement.style.setProperty('--banner-height', h + 'px');
-      document.body.classList.add('pwa-banner-visible');
-      banner.classList.add('show');
-      banner.setAttribute('aria-hidden', 'false');
-    }
-    console.log('PWA install available — showing banner/button');
-  });
+  if (banner) {
+    // compute height first (force layout) then show
+    const computedH = banner.offsetHeight || 56;
+    document.documentElement.style.setProperty('--banner-height', computedH + 'px');
+
+    // small delay for better perceived smoothness
+    requestAnimationFrame(() => {
+      document.body.classList.add('pwa-banner-visible'); // adds padding-top
+      // slight timeout to allow CSS variables to apply before animate
+      setTimeout(() => {
+        banner.classList.add('show');
+        banner.setAttribute('aria-hidden', 'false');
+      }, 40);
+    });
+  }
+
+  console.log('PWA install available — showing banner/button');
+});
 
   // CTA on banner (DOWNLOAD)
   if (ctaBanner) {
