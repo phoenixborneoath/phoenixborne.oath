@@ -412,10 +412,101 @@ header {
 
 /* Ensure images inside sections don't overflow */
 .section img { max-width: 100%; height: auto; display:block; }
+    /* PWA top install banner */
+.pwa-banner {
+  --banner-bg: #0b0b0b;
+  --banner-color: #fff;
+  --banner-height: 56px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--banner-height);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 14px;
+  background: linear-gradient(90deg, rgba(255,204,0,0.06), rgba(255,204,0,0.02)), var(--banner-bg);
+  color: var(--banner-color);
+  z-index: 9999;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.45);
+  transform: translateY(-120%);
+  transition: transform 280ms cubic-bezier(.2,.8,.2,1), opacity 200ms ease;
+  opacity: 0;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+}
+
+/* show */
+.pwa-banner.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* push content down when banner visible */
+body.pwa-banner-visible {
+  transition: padding-top 280ms cubic-bezier(.2,.8,.2,1);
+  padding-top: calc(var(--banner-height));
+}
+
+/* layout */
+.pwa-banner .left {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.pwa-banner .logo { width:34px; height:34px; border-radius:999px; overflow:hidden; display:flex; align-items:center; justify-content:center; background:#000; flex-shrink:0; }
+.pwa-banner .logo img { width:100%; height:100%; object-fit:cover; display:block; }
+.pwa-banner .text .title { font-weight:700; font-size:0.86rem; letter-spacing:0.04em; }
+.pwa-banner .text .sub { font-size:0.75rem; color:rgba(255,255,255,0.9); }
+
+/* CTA button */
+.pwa-banner .cta {
+  margin-left: 12px;
+  background: linear-gradient(180deg,#ffd200,#f4b800);
+  color: #111;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-weight:700;
+  cursor:pointer;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  transition: transform 180ms ease;
+  flex-shrink:0;
+}
+.pwa-banner .cta:active { transform: translateY(1px) }
+
+/* dismiss */
+.pwa-banner .dismiss { margin-left:8px; background:transparent; border:none; color:rgba(255,255,255,0.75); font-size:1.1rem; cursor:pointer; padding:6px; flex-shrink:0; }
+
+/* responsive tweaks */
+@media (max-width:480px){
+  .pwa-banner { --banner-height:64px; padding:10px; gap:10px; }
+  .pwa-banner .text .sub { display:none; }
+  .pwa-banner .cta { padding:7px 10px; font-size:0.8rem; }
+}
 
   </style>
 </head>
 <body>
+  <!-- PWA top banner (paste langsung setelah <body>) -->
+<div id="pwa-banner" class="pwa-banner" role="banner" aria-hidden="true">
+  <div class="left">
+    <div class="logo"><img src="phoenix.png" alt="logo"></div>
+    <div class="text">
+      <div class="title">APLIKASI PHOENIXBORNE</div>
+      <div class="sub">Kini telah tersedia — tap Download untuk pasang</div>
+    </div>
+  </div>
+
+  <!-- CTA download (banner) -->
+  <button id="pwa-download-btn" class="cta" aria-label="Install App">DOWNLOAD</button>
+
+  <!-- dismiss -->
+  <button id="pwa-dismiss-btn" class="dismiss" aria-label="Tutup banner">&times;</button>
+</div>
+
   <div class="wrapper">
     <div class="card">
       <header>
@@ -524,7 +615,38 @@ header {
   </div>
   
   <script>
-  // register service worker
+(function () {
+  'use strict';
+
+  // ---------- Elements ----------
+  const banner = document.getElementById('pwa-banner');
+  const ctaBanner = document.getElementById('pwa-download-btn');
+  const dismissBtn = document.getElementById('pwa-dismiss-btn');
+  const headerInstallBtn = document.getElementById('pwa-install-btn');
+
+  // Helper: hide banner & cleanup
+  function hideBanner() {
+    if (banner) {
+      banner.classList.remove('show');
+      banner.setAttribute('aria-hidden', 'true');
+    }
+    if (headerInstallBtn) {
+      headerInstallBtn.classList.remove('show');
+      headerInstallBtn.setAttribute('aria-hidden', 'true');
+    }
+    document.body.classList.remove('pwa-banner-visible');
+    document.documentElement.style.removeProperty('--banner-height');
+  }
+
+  // If user previously dismissed, keep banner hidden immediately (no flicker)
+  if (banner && localStorage.getItem('pwaBannerDismissed') === '1') {
+    banner.classList.remove('show');
+    banner.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('pwa-banner-visible');
+    document.documentElement.style.removeProperty('--banner-height');
+  }
+
+  // ===== service worker registration =====
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/service-worker.js')
@@ -533,51 +655,85 @@ header {
     });
   }
 
-  // PWA install handling
-  (function() {
-    let deferredPrompt = null;
-    const installBtn = document.getElementById('pwa-install-btn');
+  // Manage beforeinstallprompt
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    window.__pwaDeferredPrompt = e; // optional exposure
 
-    if (!installBtn) return;
-
-    installBtn.classList.remove('show');
-    installBtn.setAttribute('aria-hidden', 'true');
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      installBtn.classList.add('show');
-      installBtn.setAttribute('aria-hidden', 'false');
-      console.log('PWA install available — showing install button');
-    });
-
-    installBtn.addEventListener('click', async () => {
-      if (!deferredPrompt) {
-        console.log('No install prompt available');
-        return;
-      }
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      console.log('User response to the install prompt:', outcome);
-      installBtn.classList.remove('show');
-      installBtn.setAttribute('aria-hidden', 'true');
-      deferredPrompt = null;
-    });
-
-    window.addEventListener('appinstalled', () => {
-      console.log('PWA was installed');
-      installBtn.classList.remove('show');
-      installBtn.setAttribute('aria-hidden', 'true');
-      deferredPrompt = null;
-    });
-
-    // Optional iOS fallback
-    const isIos = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
-    const isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
-    if (isIos && !isInStandaloneMode) {
-      // show instructions for "Add to Home Screen" if desired
+    // Show banner (and header small install button if present)
+    if (banner) {
+      const h = banner.offsetHeight || 56;
+      document.documentElement.style.setProperty('--banner-height', h + 'px');
+      document.body.classList.add('pwa-banner-visible');
+      banner.classList.add('show');
+      banner.setAttribute('aria-hidden', 'false');
     }
-  })();
+    if (headerInstallBtn) {
+      headerInstallBtn.classList.add('show');
+      headerInstallBtn.setAttribute('aria-hidden', 'false');
+    }
+    console.log('PWA install available — showing banner/button');
+  });
+
+  // CTA on banner (DOWNLOAD)
+  if (ctaBanner) {
+    ctaBanner.addEventListener('click', async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const choice = await deferredPrompt.userChoice;
+        console.log('PWA install result:', choice.outcome);
+        hideBanner();
+        deferredPrompt = null;
+        window.__pwaDeferredPrompt = null;
+      } else {
+        // fallback for iOS Safari etc.
+        alert('Untuk memasang pada iPhone: buka menu browser → "Add to Home Screen" (Tambahkan ke Layar Utama).');
+      }
+    });
+  }
+
+  // header install small button
+  if (headerInstallBtn) {
+    headerInstallBtn.addEventListener('click', async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const choice = await deferredPrompt.userChoice;
+        console.log('PWA install result (header):', choice.outcome);
+        headerInstallBtn.classList.remove('show');
+        headerInstallBtn.setAttribute('aria-hidden', 'true');
+        hideBanner();
+        deferredPrompt = null;
+      } else {
+        alert('Install tidak tersedia. Untuk iPhone: buka menu browser → "Add to Home Screen".');
+      }
+    });
+  }
+
+  // Dismiss button on banner
+  if (dismissBtn) {
+    dismissBtn.addEventListener('click', () => {
+      hideBanner();
+      try { localStorage.setItem('pwaBannerDismissed', '1'); } catch (e) { /* ignore */ }
+    });
+  }
+
+  // When app installed (real install), hide banner & remember
+  window.addEventListener('appinstalled', () => {
+    hideBanner();
+    try { localStorage.setItem('pwaBannerDismissed', '1'); } catch (e) { /* ignore */ }
+  });
+
+  // Keep banner height updated on resize (so body padding matches)
+  window.addEventListener('resize', () => {
+    if (banner && banner.classList.contains('show')) {
+      const h = banner.offsetHeight || 56;
+      document.documentElement.style.setProperty('--banner-height', h + 'px');
+    }
+  });
+
+})();
 </script>
 
 </body>
