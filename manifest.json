@@ -1,0 +1,25 @@
+{
+  "name": "Phoenixborne Oath",
+  "short_name": "Phoenixborne",
+  "description": "Brand yang lahir dari abu — setiap artikel kaos membawa satu kisah kebangkitan.",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#000000",
+  "theme_color": "#0b0b0b",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
