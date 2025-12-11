@@ -86,6 +86,7 @@
       position: relative;
       overflow: hidden;
       box-shadow: 0 0 22px rgba(255,255,255,0.14);
+      flex-shrink: 0;
     }
 
     .crest::before {
@@ -97,12 +98,10 @@
       mix-blend-mode: screen;
     }
 
-    .crest span {
-      font-family: "Cinzel", serif;
-      font-weight: 800;
-      font-size: 24px;
-      letter-spacing: 0.18em;
-      color: var(--silver-strong);
+    .crest img {
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
       z-index: 1;
     }
 
@@ -147,7 +146,6 @@
       }
     }
 
-    /* Main social block */
     .section {
       background: rgba(3, 3, 5, 0.8);
       border-radius: var(--radius);
@@ -241,7 +239,6 @@
       transform: translateX(0);
     }
 
-    /* Secondary column */
     .mini-list {
       display: flex;
       flex-direction: column;
@@ -298,14 +295,14 @@
       <header>
         <div class="brand-mark">
           <div class="crest">
-            <img src="phoenix.png" alt="Phoenixborne Oath" style="width:56px; height:56px; object-fit:contain;">
-</div>
+            <img src="phoenix.png" alt="Phoenixborne Oath">
           </div>
           <div class="brand-text">
             <h1>PHOENIXBORNE <span>OATH</span></h1>
             <p>Brand yang lahir dari abu – setiap artikel kaos membawa satu kisah kebangkitan.</p>
           </div>
         </div>
+
         <div class="tagline">Gothic • Silver • Oathbound</div>
       </header>
 
@@ -322,7 +319,6 @@
           </div>
 
           <div class="social-links">
-            <!-- Ganti # dengan link asli -->
             <a href="https://www.instagram.com/phoenixborne_oath" class="social-btn" target="_blank" rel="noopener">
               <span class="label">Instagram</span>
               <span class="handle">@phoenixborne_oath</span>
@@ -345,11 +341,11 @@
 
             <a href="https://youtube.com/@phoenixborneoath?si=0XQmDfLXh6iYYD_h" class="social-btn" target="_blank" rel="noopener">
               <span class="label">YouTube</span>
-              <span class="handle">Phoenixborne. Oath</span>
+              <span class="handle">Phoenixborne Oath</span>
             </a>
 
-            <!-- contoh: link toko -->
-            <a href="https://phoenixborneoath.github.io/phoenixborne.oath/shop.html" class="social-btn" target="_blank" rel="noopener">
+            <!-- Store: arahkan ke domain .com -->
+            <a href="https://phoenixborneoath.com" class="social-btn" target="_blank" rel="noopener">
               <span class="label">Store</span>
               <span class="handle">Official Shop</span>
             </a>
@@ -382,7 +378,7 @@
               <div class="mini-title">Kolaborasi & pemesanan</div>
               <div class="mini-meta">
                 Email: <strong>scorched.oath@gmail.com</strong><br />
-                WhatsApp: <strong>+62-8xx-xxxx-xxxx</strong>
+                WhatsApp: <strong>+62-8xx-xxxx-xxxx</strong> <!-- ganti dengan nomor asli kamu -->
               </div>
             </div>
           </div>
