@@ -11,25 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
 
   <style>
-    /* pastikan banner tidak overflow, logo tidak melebihi kotaknya */
-.pwa-banner {
-  overflow: hidden;              /* cegah elemen anak melebihi area banner */
-}
-.pwa-banner .logo { 
-  width:34px; 
-  height:34px; 
-  min-width:34px; 
-  min-height:34px; 
-  overflow:hidden;
-}
-.pwa-banner .logo img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain; /* contain agar tidak ter-crop secara aneh */
-}
+
     :root {
       --bg: #050507;
       --bg-alt: #0b0b10;
@@ -390,7 +372,7 @@ header {
 
 /* Ensure images inside sections don't overflow */
 .section img { max-width: 100%; height: auto; display:block; }
-   /* PWA top install banner (improved animation + reduced-motion) */
+    /* PWA top install banner */
 .pwa-banner {
   --banner-bg: #0b0b0b;
   --banner-color: #fff;
@@ -408,33 +390,38 @@ header {
   color: var(--banner-color);
   z-index: 9999;
   box-shadow: 0 6px 24px rgba(0,0,0,0.45);
-  transform: translateY(-110%);
+  transform: translateY(-120%);
+  transition: transform 280ms cubic-bezier(.2,.8,.2,1), opacity 200ms ease;
   opacity: 0;
-  /* animation handled by transform/opacity for smoothness */
-  transition: transform 360ms cubic-bezier(.2,.8,.2,1), opacity 260ms ease;
   font-family: Inter, system-ui, -apple-system, sans-serif;
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
-  will-change: transform, opacity;
 }
 
-/* visible state */
+/* show */
 .pwa-banner.show {
   transform: translateY(0);
   opacity: 1;
 }
 
-/* reduced motion: avoid animations for users who prefer not to animate */
-@media (prefers-reduced-motion: reduce) {
-  .pwa-banner,
-  .pwa-banner.show {
-    transition: none;
-    transform: none;
-    opacity: 1;
-  }
+/* push content down when banner visible */
+body.pwa-banner-visible {
+  transition: padding-top 280ms cubic-bezier(.2,.8,.2,1);
+  padding-top: calc(var(--banner-height));
 }
 
-/* CTA micro-interaction */
+/* layout */
+.pwa-banner .left {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.pwa-banner .logo { width:34px; height:34px; border-radius:999px; overflow:hidden; display:flex; align-items:center; justify-content:center; background:#000; flex-shrink:0; }
+.pwa-banner .logo img { width:100%; height:100%; object-fit:cover; display:block; }
+.pwa-banner .text .title { font-weight:700; font-size:0.86rem; letter-spacing:0.04em; }
+.pwa-banner .text .sub { font-size:0.75rem; color:rgba(255,255,255,0.9); }
+
+/* CTA button */
 .pwa-banner .cta {
   margin-left: 12px;
   background: linear-gradient(180deg,#ffd200,#f4b800);
@@ -445,15 +432,13 @@ header {
   font-weight:700;
   cursor:pointer;
   box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-  transition: transform 160ms ease, box-shadow 160ms ease;
+  transition: transform 180ms ease;
   flex-shrink:0;
-  transform-origin: center;
 }
-.pwa-banner .cta:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 10px 28px rgba(0,0,0,0.3); }
-.pwa-banner .cta:active { transform: translateY(0.5px) scale(0.998); }
+.pwa-banner .cta:active { transform: translateY(1px) }
 
-/* slightly reduce flicker by backface-visibility */
-.pwa-banner, .pwa-banner * { backface-visibility: hidden; -webkit-font-smoothing: antialiased; }
+/* dismiss */
+.pwa-banner .dismiss { margin-left:8px; background:transparent; border:none; color:rgba(255,255,255,0.75); font-size:1.1rem; cursor:pointer; padding:6px; flex-shrink:0; }
 
 /* responsive tweaks */
 @media (max-width:480px){
@@ -594,52 +579,25 @@ header {
   const ctaBanner = document.getElementById('pwa-download-btn');
   const dismissBtn = document.getElementById('pwa-dismiss-btn');
 
-  // Helper: update CSS var --banner-height to actual banner height
-  function updateBannerHeight() {
-    if (!banner) return;
-    requestAnimationFrame(() => {
-      const h = banner.offsetHeight || 56;
-      document.documentElement.style.setProperty('--banner-height', h + 'px');
-    });
-  }
-
-  // Helper: hide banner & cleanup (keeps small delay -> prevents jump)
+  // Helper: hide banner & cleanup
   function hideBanner() {
     if (banner) {
       banner.classList.remove('show');
       banner.setAttribute('aria-hidden', 'true');
     }
-    // allow animation to finish then remove body padding
-    setTimeout(() => {
-      document.body.classList.remove('pwa-banner-visible');
-      document.documentElement.style.removeProperty('--banner-height');
-    }, 380); // matches CSS transition time roughly
+    document.body.classList.remove('pwa-banner-visible');
+    document.documentElement.style.removeProperty('--banner-height');
   }
 
   // If user previously dismissed, keep banner hidden immediately (no flicker)
-  try {
-    if (banner && localStorage.getItem('pwaBannerDismissed') === '1') {
-      banner.classList.remove('show');
-      banner.setAttribute('aria-hidden', 'true');
-      document.body.classList.remove('pwa-banner-visible');
-      document.documentElement.style.removeProperty('--banner-height');
-    }
-  } catch (e) { /* ignore private mode/localStorage issues */ }
-
-  // Recalculate height after banner logo image loads (so measurement is correct)
-  if (banner) {
-    const logoImg = banner.querySelector && banner.querySelector('.logo img');
-    if (logoImg) {
-      if (logoImg.complete) {
-        updateBannerHeight();
-      } else {
-        logoImg.addEventListener('load', updateBannerHeight, { once: true });
-        logoImg.addEventListener('error', updateBannerHeight, { once: true });
-      }
-    }
+  if (banner && localStorage.getItem('pwaBannerDismissed') === '1') {
+    banner.classList.remove('show');
+    banner.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('pwa-banner-visible');
+    document.documentElement.style.removeProperty('--banner-height');
   }
 
-  // ===== service worker registration (optional) =====
+  // ===== service worker registration =====
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/service-worker.js')
@@ -653,23 +611,17 @@ header {
   window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
-    window.__pwaDeferredPrompt = e; // optional exposure for debugging
+    window.__pwaDeferredPrompt = e; // optional exposure
 
+    // Show banner
     if (banner) {
-      // ensure CSS var set from current measured height
-      updateBannerHeight();
-
-      // apply body padding then show banner smoothly
-      requestAnimationFrame(() => {
-        document.body.classList.add('pwa-banner-visible'); // adds padding-top
-        setTimeout(() => {
-          banner.classList.add('show');
-          banner.setAttribute('aria-hidden', 'false');
-        }, 40);
-      });
+      const h = banner.offsetHeight || 56;
+      document.documentElement.style.setProperty('--banner-height', h + 'px');
+      document.body.classList.add('pwa-banner-visible');
+      banner.classList.add('show');
+      banner.setAttribute('aria-hidden', 'false');
     }
-
-    console.log('PWA install available — showing banner');
+    console.log('PWA install available — showing banner/button');
   });
 
   // CTA on banner (DOWNLOAD)
@@ -703,9 +655,12 @@ header {
     try { localStorage.setItem('pwaBannerDismissed', '1'); } catch (e) { /* ignore */ }
   });
 
-  // Keep banner height updated on resize
+  // Keep banner height updated on resize (so body padding matches)
   window.addEventListener('resize', () => {
-    if (banner && banner.classList.contains('show')) updateBannerHeight();
+    if (banner && banner.classList.contains('show')) {
+      const h = banner.offsetHeight || 56;
+      document.documentElement.style.setProperty('--banner-height', h + 'px');
+    }
   });
 
 })();
