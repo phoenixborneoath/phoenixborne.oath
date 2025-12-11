@@ -11,46 +11,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
 
   <style>
-    /* Install button: pojok kanan atas header */
-#pwa-install-btn {
-  position: absolute;
-  right: 18px;
-  top: 18px;
-  z-index: 40;
-  padding: 8px 12px;
-  border-radius: 999px;
-  border: 1px solid rgba(255,255,255,0.12);
-  background: rgba(255,255,255,0.03);
-  color: var(--silver);
-  font-size: 0.82rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: transform var(--transition), background var(--transition), box-shadow var(--transition);
-  display: none; /* default hidden — will be shown by JS when ready */
-}
-
-/* visible state */
-#pwa-install-btn.show {
-  display: inline-block;
-}
-
-/* hover */
-#pwa-install-btn:hover {
-  transform: translateY(-2px);
-  background: rgba(255,255,255,0.06);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.5);
-}
-
-/* mobile adjustments */
-@media (max-width: 480px) {
-  #pwa-install-btn {
-    right: 12px;
-    top: 12px;
-    padding: 7px 10px;
-    font-size: 0.72rem;
-  }
-}
 
     :root {
       --bg: #050507;
@@ -521,11 +481,7 @@ body.pwa-banner-visible {
         </div>
 
         <div class="tagline">Gothic • Silver • Oathbound</div>
-        <!-- Custom install button (tampilkan/hidden via JS) -->
-<button id="pwa-install-btn" aria-hidden="true" title="Install app">
-  Install App
-</button>
-
+        
       </header>
 
       <div class="grid">
@@ -614,7 +570,7 @@ body.pwa-banner-visible {
     </div>
   </div>
   
-  <script>
+ <script>
 (function () {
   'use strict';
 
@@ -622,17 +578,12 @@ body.pwa-banner-visible {
   const banner = document.getElementById('pwa-banner');
   const ctaBanner = document.getElementById('pwa-download-btn');
   const dismissBtn = document.getElementById('pwa-dismiss-btn');
-  const headerInstallBtn = document.getElementById('pwa-install-btn');
 
   // Helper: hide banner & cleanup
   function hideBanner() {
     if (banner) {
       banner.classList.remove('show');
       banner.setAttribute('aria-hidden', 'true');
-    }
-    if (headerInstallBtn) {
-      headerInstallBtn.classList.remove('show');
-      headerInstallBtn.setAttribute('aria-hidden', 'true');
     }
     document.body.classList.remove('pwa-banner-visible');
     document.documentElement.style.removeProperty('--banner-height');
@@ -662,17 +613,13 @@ body.pwa-banner-visible {
     deferredPrompt = e;
     window.__pwaDeferredPrompt = e; // optional exposure
 
-    // Show banner (and header small install button if present)
+    // Show banner
     if (banner) {
       const h = banner.offsetHeight || 56;
       document.documentElement.style.setProperty('--banner-height', h + 'px');
       document.body.classList.add('pwa-banner-visible');
       banner.classList.add('show');
       banner.setAttribute('aria-hidden', 'false');
-    }
-    if (headerInstallBtn) {
-      headerInstallBtn.classList.add('show');
-      headerInstallBtn.setAttribute('aria-hidden', 'false');
     }
     console.log('PWA install available — showing banner/button');
   });
@@ -690,23 +637,6 @@ body.pwa-banner-visible {
       } else {
         // fallback for iOS Safari etc.
         alert('Untuk memasang pada iPhone: buka menu browser → "Add to Home Screen" (Tambahkan ke Layar Utama).');
-      }
-    });
-  }
-
-  // header install small button
-  if (headerInstallBtn) {
-    headerInstallBtn.addEventListener('click', async () => {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        const choice = await deferredPrompt.userChoice;
-        console.log('PWA install result (header):', choice.outcome);
-        headerInstallBtn.classList.remove('show');
-        headerInstallBtn.setAttribute('aria-hidden', 'true');
-        hideBanner();
-        deferredPrompt = null;
-      } else {
-        alert('Install tidak tersedia. Untuk iPhone: buka menu browser → "Add to Home Screen".');
       }
     });
   }
