@@ -11,6 +11,47 @@
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
 
   <style>
+    /* Install button: pojok kanan atas header */
+#pwa-install-btn {
+  position: absolute;
+  right: 18px;
+  top: 18px;
+  z-index: 40;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.03);
+  color: var(--silver);
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform var(--transition), background var(--transition), box-shadow var(--transition);
+  display: none; /* default hidden — will be shown by JS when ready */
+}
+
+/* visible state */
+#pwa-install-btn.show {
+  display: inline-block;
+}
+
+/* hover */
+#pwa-install-btn:hover {
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.06);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+}
+
+/* mobile adjustments */
+@media (max-width: 480px) {
+  #pwa-install-btn {
+    right: 12px;
+    top: 12px;
+    padding: 7px 10px;
+    font-size: 0.72rem;
+  }
+}
+
     :root {
       --bg: #050507;
       --bg-alt: #0b0b10;
@@ -303,6 +344,7 @@ html, body {
 
 /* Header improvements: allow wrapping & avoid forced max-width on text */
 header {
+  position: relative;
   gap: 12px;
   padding-bottom: 18px;
   margin-bottom: 18px;
@@ -388,6 +430,11 @@ header {
         </div>
 
         <div class="tagline">Gothic • Silver • Oathbound</div>
+        <!-- Custom install button (tampilkan/hidden via JS) -->
+<button id="pwa-install-btn" aria-hidden="true" title="Install app">
+  Install App
+</button>
+
       </header>
 
       <div class="grid">
@@ -405,7 +452,7 @@ header {
           <div class="social-links">
             <a href="https://www.instagram.com/phoenixborne_oath" class="social-btn" target="_blank" rel="noopener">
               <span class="label">Instagram</span>
-              <span class="handle">@phoenixborne_oath</span>
+              <span class="handle">@phoenixborneoath</span>
             </a>
 
             <a href="https://www.tiktok.com/@tourdoamerta" class="social-btn" target="_blank" rel="noopener">
@@ -477,14 +524,61 @@ header {
   </div>
   
   <script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js')
-      .then(reg => console.log('SW registered:', reg.scope))
-      .catch(err => console.warn('SW registration failed:', err));
-  });
-}
+  // register service worker
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(reg => console.log('SW registered:', reg.scope))
+        .catch(err => console.warn('SW registration failed:', err));
+    });
+  }
+
+  // PWA install handling
+  (function() {
+    let deferredPrompt = null;
+    const installBtn = document.getElementById('pwa-install-btn');
+
+    if (!installBtn) return;
+
+    installBtn.classList.remove('show');
+    installBtn.setAttribute('aria-hidden', 'true');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.classList.add('show');
+      installBtn.setAttribute('aria-hidden', 'false');
+      console.log('PWA install available — showing install button');
+    });
+
+    installBtn.addEventListener('click', async () => {
+      if (!deferredPrompt) {
+        console.log('No install prompt available');
+        return;
+      }
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log('User response to the install prompt:', outcome);
+      installBtn.classList.remove('show');
+      installBtn.setAttribute('aria-hidden', 'true');
+      deferredPrompt = null;
+    });
+
+    window.addEventListener('appinstalled', () => {
+      console.log('PWA was installed');
+      installBtn.classList.remove('show');
+      installBtn.setAttribute('aria-hidden', 'true');
+      deferredPrompt = null;
+    });
+
+    // Optional iOS fallback
+    const isIos = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+    const isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
+    if (isIos && !isInStandaloneMode) {
+      // show instructions for "Add to Home Screen" if desired
+    }
+  })();
 </script>
-  
+
 </body>
 </html>
