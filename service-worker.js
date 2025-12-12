@@ -5,14 +5,12 @@ const ASSETS_TO_CACHE = [
   '/offline.html',
   '/icons/icon-192.png',
   '/icons/icon-512.png'
-  // jangan masukkan /styles.css atau /main.js di sini kalau kamu tidak yakin nama asli.
 ];
 
 function isSafeCacheUrl(url) {
   try {
     const u = new URL(url, self.location.href);
-    // hanya cache http(s) dan same-origin (atau at least https from same origin)
-    return (u.protocol === 'https:' || u.protocol === 'http:') && (u.origin === location.origin);
+    return (u.protocol === 'https:' || u.protocol === 'http:') && (u.origin === self.location.origin);
   } catch (e) {
     return false;
   }
@@ -29,8 +27,8 @@ self.addEventListener('install', event => {
         }
         try {
           const resp = await fetch(url, {cache: 'no-store'});
-          if (!resp || resp.status !== 200) throw new Error('Bad response ' + (resp && resp.status));
-          await cache.put(url, resp.clone());
+          if (!resp || !(resp.ok) ) throw new Error('Bad response ' + (resp && resp.status));
+          await cache.put(url, resp.clone()); // store by url string
           return {url, ok: true};
         } catch (err) {
           return Promise.reject({url, reason: err.message});
@@ -62,20 +60,19 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   const req = event.request;
 
-  // navigations: network-first, fallback offline
+  // navigations: network-first, fallback offline.html
   if (req.mode === 'navigate') {
     event.respondWith(
-      fetch(req)
-        .then(res => {
+      fetch(req).then(res => {
+        // simpan versi navigasi jika valid
+        if (isSafeCacheUrl(req.url) && res && res.ok) {
           const resClone = res.clone();
-          if (isSafeCacheUrl(req.url) && res && res.status === 200) {
-            caches.open(CACHE_NAME).then(cache => {
-              try { cache.put(req, resClone); } catch (e) { /* ignore invalid schemes */ }
-            });
-          }
-          return res;
-        })
-        .catch(() => caches.match('/offline.html'))
+          caches.open(CACHE_NAME).then(cache => {
+            try { cache.put(req.url, resClone); } catch (e) { /* ignore */ }
+          });
+        }
+        return res;
+      }).catch(() => caches.match('/offline.html'))
     );
     return;
   }
@@ -83,22 +80,23 @@ self.addEventListener('fetch', event => {
   // assets: cache-first
   if (req.method === 'GET') {
     event.respondWith(
-      caches.match(req).then(cached => {
+      caches.match(req.url).then(cached => {
         if (cached) return cached;
-        return fetch(req)
-          .then(resp => {
-            if (!resp || resp.status !== 200) return resp;
-            if (isSafeCacheUrl(req.url)) {
-              caches.open(CACHE_NAME).then(cache => {
-                try { cache.put(req, resp.clone()); } catch (e) { /* ignore */ }
-              });
-            }
-            return resp;
-          })
-          .catch(() => {
-            if (req.destination === 'image') return caches.match('/icons/icon-192.png');
-            return caches.match('/offline.html');
-          });
+        return fetch(req).then(resp => {
+          if (!resp || !(resp.ok)) return resp;
+          // jika same-origin dan aman, cache
+          if (isSafeCacheUrl(req.url)) {
+            const toCache = resp.clone();
+            caches.open(CACHE_NAME).then(cache => {
+              try { cache.put(req.url, toCache); } catch (e) { /* ignore */ }
+            });
+          }
+          return resp;
+        }).catch(() => {
+          // fallback kalau network error
+          if (req.destination === 'image') return caches.match('/icons/icon-192.png');
+          return caches.match('/offline.html');
+        });
       })
     );
   }
