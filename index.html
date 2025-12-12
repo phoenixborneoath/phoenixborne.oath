@@ -583,33 +583,38 @@ body.pwa-banner-visible {
 (function () {
   'use strict';
 
-  // ---------- Elements ----------
+  // elemen banner
   const banner = document.getElementById('pwa-banner');
   const ctaBanner = document.getElementById('pwa-download-btn');
   const dismissBtn = document.getElementById('pwa-dismiss-btn');
 
-  // Helper: hide banner & cleanup
-  function hideBanner() {
-  if (banner) {
+  // helper hide hanya untuk sesi ini (tidak disimpan)
+  function hideBannerForNow() {
+    if (!banner) return;
     banner.classList.remove('show');
     banner.setAttribute('aria-hidden','true');
-  }
-  // tunggu sampai animasi selesai, lalu hapus padding
-  setTimeout(() => {
-    document.body.classList.remove('pwa-banner-visible');
-    document.documentElement.style.removeProperty('--banner-height');
-  }, 360); // sesuaikan dengan durasi transition di CSS (280–360ms)
-}
-
-  // If user previously dismissed, keep banner hidden immediately (no flicker)
-  if (banner && localStorage.getItem('pwaBannerDismissed') === '1') {
-    banner.classList.remove('show');
-    banner.setAttribute('aria-hidden', 'true');
-    document.body.classList.remove('pwa-banner-visible');
-    document.documentElement.style.removeProperty('--banner-height');
+    // hapus padding setelah anim selesai
+    setTimeout(() => {
+      document.body.classList.remove('pwa-banner-visible');
+      document.documentElement.style.removeProperty('--banner-height');
+    }, 360);
   }
 
-  // ===== service worker registration =====
+  // tampilkan banner (menghitung tinggi dulu)
+  function showBanner() {
+    if (!banner) return;
+    // ukur dulu
+    const h = banner.offsetHeight || 56;
+    document.documentElement.style.setProperty('--banner-height', h + 'px');
+    document.body.classList.add('pwa-banner-visible');
+    // animasi masuk
+    requestAnimationFrame(() => {
+      banner.classList.add('show');
+      banner.setAttribute('aria-hidden','false');
+    });
+  }
+
+  // ===== service worker registration (tetap) =====
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('/service-worker.js')
@@ -617,103 +622,73 @@ body.pwa-banner-visible {
         .catch(err => console.warn('SW registration failed:', err));
     });
   }
-  // ===== iOS detection — tampilkan instruksi Add to Home Screen =====
-function isIos() {
-  return /iphone|ipad|ipod/i.test(navigator.userAgent);
-}
 
-function showIosInstallTip() {
-  const banner = document.getElementById('pwa-banner');
-  if (!banner) return;
-
-  const sub = banner.querySelector('.sub');
-  if (sub) {
-    sub.textContent = 'Untuk memasang di iPhone: tap Share → Add to Home Screen.';
+  // ===== iOS detection: selalu tampil instruksi Add to Home Screen =====
+  function isIos() {
+    return /iphone|ipad|ipod/i.test(navigator.userAgent);
+  }
+  if (isIos()) {
+    // update teks instruksi khusus iOS
+    const sub = banner && banner.querySelector && banner.querySelector('.sub');
+    if (sub) sub.textContent = 'Untuk memasang di iPhone: tap Share → Add to Home Screen.';
+    // tampilkan (tanpa menyimpan dismiss)
+    showBanner();
   }
 
-  // tampilkan banner
-  const h = banner.offsetHeight || 56;
-  document.documentElement.style.setProperty('--banner-height', h + 'px');
-  document.body.classList.add('pwa-banner-visible');
-
-  requestAnimationFrame(() => {
-    banner.classList.add('show');
-    banner.setAttribute('aria-hidden', 'false');
-  });
-}
-
-// jika user sudah dismiss sebelumnya, jangan tampilkan lagi
-const wasDismissed = (() => {
-  try { return localStorage.getItem('pwaBannerDismissed') === '1'; }
-  catch (e) { return false; }
-})();
-
-if (!wasDismissed && isIos()) {
-  showIosInstallTip();
-}
-
-  // Manage beforeinstallprompt
+  // ===== beforeinstallprompt: simpan event dan tampilkan banner setiap kali event terjadi =====
   let deferredPrompt = null;
   window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  window.__pwaDeferredPrompt = e;
+    // mencegah browser menampilkan native prompt otomatis
+    e.preventDefault();
+    deferredPrompt = e;
+    // tampilkan banner (selalu)
+    showBanner();
+    console.log('beforeinstallprompt received — showing banner');
+  });
 
-  if (!wasDismissed && banner) {
-    // force layout + recalc height AFTER any images/fonts settle
-    requestAnimationFrame(() => {
-      const h = banner.offsetHeight || 56;
-      document.documentElement.style.setProperty('--banner-height', h + 'px');
-      document.body.classList.add('pwa-banner-visible');
-
-      // beri sedikit waktu supaya perubahan CSS variable diterapkan
-      setTimeout(() => {
-        banner.classList.add('show');
-        banner.setAttribute('aria-hidden', 'false');
-      }, 30);
-    });
-  }
-  console.log('PWA install available — showing banner/button');
-});
-
-  // CTA on banner (DOWNLOAD)
+  // tombol DOWNLOAD: jika deferredPrompt ada, panggil prompt; kalau tidak (iOS) tampilkan instruksi alert
   if (ctaBanner) {
     ctaBanner.addEventListener('click', async () => {
       if (deferredPrompt) {
         deferredPrompt.prompt();
-        const choice = await deferredPrompt.userChoice;
-        console.log('PWA install result:', choice.outcome);
-        hideBanner();
+        try {
+          const choice = await deferredPrompt.userChoice;
+          console.log('PWA install result:', choice.outcome);
+        } catch (err) {
+          console.warn('Prompt userChoice failed', err);
+        }
+        // setelah coba install, sembunyikan banner sementara
+        hideBannerForNow();
         deferredPrompt = null;
-        window.__pwaDeferredPrompt = null;
       } else {
-        // fallback for iOS Safari etc.
-        alert('Untuk memasang pada iPhone: buka menu browser → "Add to Home Screen" (Tambahkan ke Layar Utama).');
+        alert('Untuk memasang di iPhone: buka menu browser → "Add to Home Screen" (Tambahkan ke Layar Utama).');
       }
     });
   }
 
-  // Dismiss button on banner
+  // tombol dismiss hanya sembunyikan untuk sesi ini (tidak pakai localStorage)
   if (dismissBtn) {
     dismissBtn.addEventListener('click', () => {
-      hideBanner();
-      try { localStorage.setItem('pwaBannerDismissed', '1'); } catch (e) { /* ignore */ }
+      hideBannerForNow();
     });
   }
 
-  // When app installed (real install), hide banner & remember
+  // saat app diinstall, sembunyikan banner
   window.addEventListener('appinstalled', () => {
-    hideBanner();
-    try { localStorage.setItem('pwaBannerDismissed', '1'); } catch (e) { /* ignore */ }
+    hideBannerForNow();
   });
 
-  // Keep banner height updated on resize (so body padding matches)
+  // update ukuran saat resize sementara banner tampil
   window.addEventListener('resize', () => {
     if (banner && banner.classList.contains('show')) {
       const h = banner.offsetHeight || 56;
       document.documentElement.style.setProperty('--banner-height', h + 'px');
     }
   });
+
+  // OPTIONAL: kalau kamu mau banner langsung tampil juga saat pengguna belum trigger beforeinstallprompt
+  // uncomment baris berikut untuk selalu menampilkan banner di non-iOS juga (mis: testing)
+  // showBanner();
 
 })();
 </script>
