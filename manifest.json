@@ -2,6 +2,7 @@
   "name": "Phoenixborne Oath",
   "short_name": "Phoenixborne",
   "description": "Brand yang lahir dari abu — setiap artikel kaos membawa satu kisah kebangkitan.",
+  "lang": "id-ID",
   "start_url": "/?source=pwa",
   "scope": "/",
   "display": "standalone",
@@ -16,10 +17,31 @@
       "purpose": "any"
     },
     {
+      "src": "/icons/icon-192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
       "src": "/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Toko Resmi",
+      "short_name": "Store",
+      "description": "Buka Official Shop",
+      "url": "/shop.html",
+      "icons": [{ "src": "/icons/shortcut-shop.png", "sizes": "96x96" }]
     }
   ]
 }
