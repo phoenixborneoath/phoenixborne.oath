@@ -37,17 +37,18 @@
   <style>
 
     :root {
-      --bg: #050507;
-      --bg-alt: #0b0b10;
-      --silver: #d5d5d5;
-      --silver-strong: #f5f5f5;
-      --silver-deep: #8f8f8f;
-      --accent: #ffffff;
-      --border-soft: rgba(213, 213, 213, 0.12);
-      --shadow-soft: 0 0 40px rgba(255, 255, 255, 0.05);
-      --radius: 18px;
-      --transition: 200ms ease-out;
-    }
+  --banner-height: 56px;
+  --bg: #050507;
+  --bg-alt: #0b0b10;
+  --silver: #d5d5d5;
+  --silver-strong: #f5f5f5;
+  --silver-deep: #8f8f8f;
+  --accent: #ffffff;
+  --border-soft: rgba(213, 213, 213, 0.12);
+  --shadow-soft: 0 0 40px rgba(255, 255, 255, 0.05);
+  --radius: 18px;
+  --transition: 200ms ease-out;
+}
 
     * {
       box-sizing: border-box;
@@ -56,20 +57,25 @@
     }
 
     body {
-      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background: radial-gradient(circle at top, #17171f 0, #050507 45%);
-      color: var(--silver);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: stretch;
-    }
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  background: radial-gradient(circle at top, #17171f 0, #050507 45%);
+  color: var(--silver);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin: 0;
 
+  padding-top: env(safe-area-inset-top, 0);
+  padding-left: env(safe-area-inset-left, 0);
+  padding-right: env(safe-area-inset-right, 0);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
     .wrapper {
       width: 100%;
       max-width: 1080px;
       padding: 32px 20px 48px;
-      margin: auto;
+      margin: 0 auto;
     }
 
     .card {
@@ -314,102 +320,53 @@
     footer span {
       color: var(--silver-strong);
     }
-    /* Safe-area untuk iPhone notch */
-html, body {
-  padding-top: env(safe-area-inset-top, 0);
-  padding-left: env(safe-area-inset-left, 0);
-  padding-right: env(safe-area-inset-right, 0);
-  padding-bottom: env(safe-area-inset-bottom, 0);
-}
 
-/* Lebih ringkas padding wrapper/card pada layar kecil */
-.wrapper { padding: 20px 16px 36px; }
-.card { padding: 20px 16px 24px; }
-
-/* Header improvements: allow wrapping & avoid forced max-width on text */
-header {
-  position: relative;
-  gap: 12px;
-  padding-bottom: 18px;
-  margin-bottom: 18px;
-}
-
-/* Brand mark layout: allow stacked layout on small screens */
-.brand-mark {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-/* Make crest (logo) a bit smaller and flexible on small devices */
-.crest {
-  width: 48px;
-  height: 48px;
-  min-width: 48px;
-  min-height: 48px;
-  box-shadow: 0 0 12px rgba(255,255,255,0.08);
-}
-
-/* Ensure logo image scales and doesn't overflow */
-.crest img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-/* Brand text: remove forced max-width on mobile so text can wrap naturally */
-.brand-text p { max-width: none; }
-
-/* Make the H1 slightly smaller on small screens */
-.brand-text h1 {
-  font-size: clamp(1.1rem, 2.4vw, 1.4rem);
-  line-height: 1.05;
-}
-
-/* Tweak tagline spacing */
-.tagline { margin-top: 4px; }
-
-/* Social buttons layout tweak on narrow screens */
-.social-links { gap: 10px; justify-content: flex-start; }
-
-/* Reduce card radius/shadow on tiny screens (optional aesthetics) */
+/* ===== Mobile layout (SATU KALI SAJA) ===== */
 @media (max-width: 480px) {
   .wrapper { padding: 14px 12px 28px; }
   .card { padding: 16px 12px 20px; border-radius: 18px; }
+
+  header {
+    gap: 12px;
+    padding-bottom: 18px;
+    margin-bottom: 18px;
+  }
+
   .brand-mark { gap: 10px; align-items: flex-start; }
-  .brand-text h1 { font-size: 1.15rem; letter-spacing: 0.18em; }
-  .brand-text p { font-size: 0.95rem; line-height: 1.4; color: var(--silver-deep); }
-  .hero-copy h2 { font-size: 1.15rem; }
-  .social-btn { padding: 8px 12px; font-size: 0.72rem; }
+
   .crest { width: 42px; height: 42px; }
+  .crest img { width: 100%; height: 100%; object-fit: contain; }
+
+  .brand-text p { max-width: none; font-size: 0.95rem; line-height: 1.4; }
+
+  .brand-text h1 { font-size: 1.15rem; letter-spacing: 0.18em; }
+
+  .hero-copy h2 { font-size: 1.15rem; }
+
+  .social-btn { padding: 8px 12px; font-size: 0.72rem; }
 }
 
-/* If content still looks cramped, stack logo and text vertically at very small widths */
+/* extra tiny */
 @media (max-width: 360px) {
-  .brand-mark { flex-direction: row; gap: 10px; }
-  /* jika ingin logo di atas teks, gunakan:
-     .brand-mark { flex-direction: column; align-items: flex-start; } */
+  .brand-mark { gap: 10px; }
 }
 
-/* Prevent overflow from large shadows or gradients */
-* { max-width: 100%; }
+/* Prevent overflow */
+.section img { max-width: 100%; height: auto; display: block; }
 
-/* Ensure images inside sections don't overflow */
-.section img { max-width: 100%; height: auto; display:block; }
     /* PWA top install banner */
 .pwa-banner {
   --banner-bg: #0b0b0b;
   --banner-color: #fff;
-  --banner-height: 56px;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  height: var(--banner-height);
+  height: var(--banner-height, 56px);
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 8px 14px;
+  padding: calc(env(safe-area-inset-top, 0) + 8px) 14px 8px 14px;
   background: linear-gradient(90deg, rgba(255,204,0,0.06), rgba(255,204,0,0.02)), var(--banner-bg);
   color: var(--banner-color);
   z-index: 9999;
@@ -427,9 +384,9 @@ header {
 }
 
 /* push content down when banner visible */
-body.pwa-banner-visible {
+body.pwa-banner-visible .wrapper {
   transition: padding-top 280ms cubic-bezier(.2,.8,.2,1);
-  padding-top: calc(var(--banner-height));
+  padding-top: calc(var(--banner-height) + 12px);
 }
 
 /* layout */
@@ -471,28 +428,31 @@ body.pwa-banner-visible {
 
 /* responsive tweaks */
 @media (max-width:480px){
-  .pwa-banner { --banner-height:64px; padding:10px; gap:10px; }
+  .pwa-banner {
+    padding: calc(env(safe-area-inset-top, 0) + 10px) 10px 10px 10px;
+    gap:10px;
+  }
   .pwa-banner .text .sub { display:none; }
-  .pwa-banner .cta { padding:7px 10px; font-size:0.8rem; }
+  .pwa-banner .text .title { font-size: 0.8rem; }
+  .pwa-banner .cta { padding:7px 10px; font-size:0.8rem; white-space: nowrap; }
 }
-
   </style>
 </head>
 <body>
   <!-- PWA top banner (paste langsung setelah <body>) -->
 <div id="pwa-banner" class="pwa-banner" role="banner" aria-hidden="true">
   <div class="left">
-    <div class="logo"><img src="phoenix.png" alt="Phoenixborne Oath logo">
+    <div class="logo">
+      <img src="phoenix.png" alt="Phoenixborne Oath logo">
+    </div>
+
     <div class="text">
       <div class="title">APLIKASI PHOENIXBORNE</div>
       <div class="sub">Kini telah tersedia — tap Download untuk pasang</div>
     </div>
   </div>
 
-  <!-- CTA download (banner) -->
   <button id="pwa-download-btn" class="cta" aria-label="Install App">DOWNLOAD</button>
-
-  <!-- dismiss -->
   <button id="pwa-dismiss-btn" class="dismiss" aria-label="Tutup banner">&times;</button>
 </div>
 
@@ -608,36 +568,43 @@ body.pwa-banner-visible {
 (function () {
   'use strict';
 
-  // elemen banner
   const banner = document.getElementById('pwa-banner');
   const ctaBanner = document.getElementById('pwa-download-btn');
   const dismissBtn = document.getElementById('pwa-dismiss-btn');
 
+  let isBannerOpening = false;
+
   // helper hide hanya untuk sesi ini (tidak disimpan)
   function hideBannerForNow() {
-    if (!banner) return;
-    banner.classList.remove('show');
-    banner.setAttribute('aria-hidden','true');
-    // hapus padding setelah anim selesai
-    setTimeout(() => {
-      document.body.classList.remove('pwa-banner-visible');
-      document.documentElement.style.removeProperty('--banner-height');
-    }, 360);
-  }
+  if (!banner) return;
+  isBannerOpening = false;
+
+  banner.classList.remove('show');
+  banner.setAttribute('aria-hidden','true');
+
+  setTimeout(() => {
+    document.body.classList.remove('pwa-banner-visible');
+    document.documentElement.style.removeProperty('--banner-height');
+  }, 360);
+}
 
   // tampilkan banner (menghitung tinggi dulu)
   function showBanner() {
-    if (!banner) return;
-    // ukur dulu
+  if (!banner) return;
+  isBannerOpening = true;
+
+  banner.setAttribute('aria-hidden','false');
+  banner.style.visibility = 'hidden';
+  banner.classList.add('show');
+
+  requestAnimationFrame(() => {
+    if (!isBannerOpening) return;
     const h = banner.offsetHeight || 56;
     document.documentElement.style.setProperty('--banner-height', h + 'px');
     document.body.classList.add('pwa-banner-visible');
-    // animasi masuk
-    requestAnimationFrame(() => {
-      banner.classList.add('show');
-      banner.setAttribute('aria-hidden','false');
-    });
-  }
+    banner.style.visibility = '';
+  });
+}
 
   // ===== service worker registration (tetap) =====
   if ('serviceWorker' in navigator) {
