@@ -1,20 +1,30 @@
+<!-- manifesto.html — Phoenixborne Oath (theme nyambung sama homepage) -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Manifesto — Phoenixborne Oath</title>
-  <meta name="description" content="Manifesto resmi Phoenixborne Oath — sumpah kebangkitan, cerita di setiap drop, tanpa restock." />
+  <meta name="description" content="Manifesto Phoenixborne Oath — sumpah, identitas, dan kisah kebangkitan. Sworn to rise again." />
   <link rel="canonical" href="https://phoenixborneoath.id/manifesto.html" />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0b0b0b" />
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
 
-  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="Phoenixborne Oath">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
+  <!-- Fonts (samain) -->
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Optional: Brand Schema -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"WebPage",
+    "name":"Manifesto — Phoenixborne Oath",
+    "url":"https://phoenixborneoath.id/manifesto.html",
+    "isPartOf":{"@type":"WebSite","name":"Phoenixborne Oath","url":"https://phoenixborneoath.id/"},
+    "about":{"@type":"Brand","name":"Phoenixborne Oath"}
+  }
+  </script>
 
   <style>
     :root{
@@ -23,320 +33,302 @@
       --silver:#d5d5d5;
       --silver-strong:#f5f5f5;
       --silver-deep:#8f8f8f;
-      --border-soft:rgba(213,213,213,0.12);
-      --shadow-soft:0 0 40px rgba(255,255,255,0.05);
-      --radius:18px;
-      --transition:200ms ease-out;
+      --border-soft: rgba(213, 213, 213, 0.12);
+      --shadow-soft: 0 0 40px rgba(255, 255, 255, 0.05);
+      --radius: 18px;
+      --transition: 200ms ease-out;
     }
 
     *{ box-sizing:border-box; margin:0; padding:0; }
 
     body{
-      font-family:"Inter",system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+      font-family:"Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       background: radial-gradient(circle at top, #17171f 0, #050507 45%);
-      color:var(--silver);
+      color: var(--silver);
       min-height:100vh;
-      display:flex;
-      justify-content:center;
-      align-items:flex-start;
-      margin:0;
-
       padding-top: env(safe-area-inset-top, 0);
       padding-left: env(safe-area-inset-left, 0);
       padding-right: env(safe-area-inset-right, 0);
       padding-bottom: env(safe-area-inset-bottom, 0);
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
     }
+
+    a{ color:inherit; text-decoration:none; }
+    a:hover{ opacity:0.95; }
 
     .wrapper{
       width:100%;
-      max-width:1080px;
-      padding:32px 20px 48px;
+      max-width: 1080px;
+      padding: 32px 20px 48px;
       margin:0 auto;
     }
 
     .card{
       background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(0,0,0,0.8));
-      border-radius:28px;
-      border:1px solid rgba(255,255,255,0.08);
-      box-shadow:var(--shadow-soft);
-      padding:28px 22px 30px;
+      border-radius: 28px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: var(--shadow-soft);
+      padding: 28px 22px 30px;
       backdrop-filter: blur(14px);
     }
 
-    @media (min-width:900px){
-      .card{ padding:36px 40px 40px; }
+    @media (min-width: 900px){
+      .card{ padding: 36px 40px 44px; }
     }
 
-    header{
-      display:flex;
-      flex-direction:column;
-      gap:18px;
-      border-bottom:1px solid var(--border-soft);
-      padding-bottom:22px;
-      margin-bottom:26px;
-    }
-
-    .brand-mark{
+    /* Top nav (simple, nyambung) */
+    .topbar{
       display:flex;
       align-items:center;
-      gap:14px;
+      justify-content:space-between;
+      gap:16px;
+      padding-bottom: 18px;
+      margin-bottom: 22px;
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
     }
 
     .crest{
-      width:58px; height:58px;
+      width:44px;
+      height:44px;
       border-radius:999px;
-      border:1px solid rgba(255,255,255,0.22);
+      border: 1px solid rgba(255,255,255,0.22);
       display:flex;
       align-items:center;
       justify-content:center;
-      position:relative;
       overflow:hidden;
-      box-shadow:0 0 22px rgba(255,255,255,0.14);
+      box-shadow: 0 0 18px rgba(255,255,255,0.12);
       flex-shrink:0;
+      position:relative;
+      background: rgba(0,0,0,0.25);
     }
-
     .crest::before{
       content:"";
       position:absolute;
       inset:0;
-      background: radial-gradient(circle at top, rgba(255,255,255,0.4), transparent 60%);
-      opacity:0.4;
+      background: radial-gradient(circle at top, rgba(255,255,255,0.35), transparent 60%);
+      opacity:0.35;
       mix-blend-mode:screen;
     }
-
     .crest img{
-      width:56px; height:56px;
+      width:42px;
+      height:42px;
       object-fit:contain;
       z-index:1;
     }
 
-    .brand-text h1{
-      font-family:"Cinzel",serif;
+    .brand-text{
+      min-width:0;
+    }
+    .brand-text .name{
+      font-family:"Cinzel", serif;
       font-weight:700;
-      font-size:1.35rem;
-      letter-spacing:0.24em;
+      letter-spacing:0.22em;
       text-transform:uppercase;
-      color:var(--silver-strong);
+      color: var(--silver-strong);
+      font-size: 0.95rem;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
-    .brand-text h1 span{ font-weight:400; opacity:0.9; }
-
-    .brand-text p{
-      font-size:0.9rem;
-      color:var(--silver-deep);
+    .brand-text .sub{
       margin-top:4px;
-      max-width:520px;
-      line-height:1.45;
-    }
-
-    .tagline{
-      font-family:"Cinzel",serif;
-      font-size:0.85rem;
-      letter-spacing:0.28em;
+      font-size:0.78rem;
+      color: var(--silver-deep);
+      letter-spacing:0.12em;
       text-transform:uppercase;
-      color:var(--silver-deep);
     }
 
-    .top-actions{
+    .nav-actions{
       display:flex;
-      flex-wrap:wrap;
+      align-items:center;
       gap:10px;
-      margin-top:2px;
+      flex-shrink:0;
     }
 
-    .btn{
-      position:relative;
+    .pill{
       display:inline-flex;
       align-items:center;
       gap:10px;
-      padding:9px 14px;
+      padding: 9px 14px;
       border-radius:999px;
-      border:1px solid rgba(255,255,255,0.2);
-      background: radial-gradient(circle at top left, rgba(255,255,255,0.14), rgba(0,0,0,0.96));
-      color:var(--silver-strong);
-      font-size:0.78rem;
-      text-decoration:none;
-      text-transform:uppercase;
-      letter-spacing:0.16em;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: radial-gradient(circle at top left, rgba(255,255,255,0.12), rgba(0,0,0,0.95));
+      color: var(--silver-strong);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
       transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
-      overflow:hidden;
+      cursor:pointer;
     }
-
-    .btn::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background: linear-gradient(120deg, rgba(255,255,255,0.35), transparent 35%, transparent 65%, rgba(255,255,255,0.25));
-      opacity:0;
-      transition: opacity var(--transition), transform 260ms ease-out;
-      transform: translateX(-20%);
-    }
-
-    .btn:hover{
+    .pill:hover{
       transform: translateY(-1px);
-      border-color: rgba(255,255,255,0.65);
-      box-shadow: 0 0 24px rgba(255,255,255,0.16);
-    }
-    .btn:hover::before{ opacity:0.85; transform: translateX(0); }
-
-    .btn .muted{
-      font-size:0.7rem;
-      color:var(--silver-deep);
-      letter-spacing:0.10em;
+      border-color: rgba(255,255,255,0.5);
+      box-shadow: 0 0 22px rgba(255,255,255,0.12);
     }
 
-    .section{
-      background: rgba(3,3,5,0.82);
-      border-radius: var(--radius);
-      border:1px solid var(--border-soft);
-      padding:18px 18px 22px;
-      box-shadow:0 0 26px rgba(0,0,0,0.7);
+    /* Header */
+    .head{
+      text-align:center;
+      padding: 8px 0 6px;
     }
 
-    .section + .section{ margin-top:16px; }
-
-    .section-title{
-      font-size:0.75rem;
+    .kicker{
+      font-size:0.72rem;
       text-transform:uppercase;
-      letter-spacing:0.25em;
-      color:var(--silver-deep);
-      margin-bottom:14px;
-    }
-
-    .hero-copy h2{
-      font-family:"Cinzel",serif;
-      font-size:1.35rem;
-      text-transform:uppercase;
-      letter-spacing:0.18em;
-      color:var(--silver-strong);
-      margin-bottom:8px;
-    }
-
-    .hero-copy p{
-      font-size:0.92rem;
-      color:var(--silver-deep);
-      line-height:1.6;
-      max-width:720px;
-    }
-
-    /* ritual divider */
-    .divider{
-      margin:16px 0 10px;
-      height:1px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
-      opacity:0.9;
-    }
-
-    .oath-grid{
-      display:grid;
-      grid-template-columns: minmax(0,1.25fr) minmax(0,1fr);
-      gap:16px;
-      margin-top:16px;
-    }
-    @media (max-width:860px){
-      .oath-grid{ grid-template-columns: minmax(0,1fr); }
-    }
-
-    .ritual{
-      padding:14px 14px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,0.08);
-      background: radial-gradient(circle at top, rgba(255,255,255,0.06), rgba(0,0,0,0.95));
-    }
-
-    .ritual .sigil{
-      font-family:"Cinzel",serif;
       letter-spacing:0.28em;
-      text-transform:uppercase;
-      color:rgba(245,245,245,0.92);
-      font-size:0.82rem;
-      margin-bottom:8px;
+      color: var(--silver-deep);
+      margin-bottom: 10px;
     }
 
-    .ritual .line{
-      color:rgba(213,213,213,0.78);
-      line-height:1.7;
-      font-size:0.9rem;
+    h1{
+      font-family:"Cinzel", serif;
+      font-weight:800;
+      font-size: clamp(1.5rem, 3.2vw, 2.35rem);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--silver-strong);
+      margin-bottom: 12px;
     }
 
-    .chapters{
+    .divider{
+      height:1px;
+      width: min(420px, 88%);
+      margin: 0 auto;
+      background: linear-gradient(90deg, transparent, rgba(213,213,213,0.35), transparent);
+    }
+
+    /* Body */
+    .content{
+      max-width: 720px;
+      margin: 22px auto 0;
       display:flex;
       flex-direction:column;
-      gap:12px;
+      gap: 14px;
+      line-height: 1.85;
+      font-size: 0.98rem;
+      color: rgba(213,213,213,0.92);
     }
 
-    .chapter{
-      padding:12px 12px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,0.08);
+    .content p{
+      color: rgba(213,213,213,0.9);
+    }
+
+    .content strong{
+      color: var(--silver-strong);
+      font-weight: 700;
+    }
+
+    .quote{
+      margin-top: 8px;
+      padding: 16px 16px 18px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-soft);
+      background: rgba(3,3,5,0.72);
+      box-shadow: 0 0 26px rgba(0,0,0,0.7);
+    }
+
+    .quote .line{
+      font-family:"Cinzel", serif;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.98rem;
+      color: var(--silver-strong);
+      line-height: 1.6;
+    }
+
+    .oath{
+      margin-top: 10px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-soft);
+      background: rgba(3,3,5,0.72);
+      padding: 18px 18px 20px;
+      box-shadow: 0 0 26px rgba(0,0,0,0.7);
+    }
+
+    .oath .title{
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      color: var(--silver-deep);
+      margin-bottom: 12px;
+      text-align:center;
+    }
+
+    .oath ol{
+      list-style: none;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      counter-reset: oath;
+    }
+
+    .oath li{
+      counter-increment: oath;
+      padding: 12px 12px 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
       background: radial-gradient(circle at top, rgba(255,255,255,0.06), rgba(0,0,0,0.95));
     }
 
-    .chapter .kicker{
-      text-transform:uppercase;
-      letter-spacing:0.22em;
-      color:var(--silver-deep);
-      font-size:0.7rem;
-      margin-bottom:6px;
-    }
-
-    .chapter .title{
-      font-family:"Cinzel",serif;
-      color:var(--silver-strong);
-      font-size:0.95rem;
+    .oath li::before{
+      content: counter(oath) ".";
+      display:inline-block;
+      width: 26px;
+      color: rgba(213,213,213,0.7);
+      font-family:"Cinzel", serif;
       letter-spacing:0.06em;
-      margin-bottom:4px;
     }
 
-    .chapter .text{
-      color:rgba(213,213,213,0.78);
-      font-size:0.88rem;
-      line-height:1.6;
+    .closing{
+      margin-top: 6px;
+      text-align:center;
+      padding-top: 10px;
     }
 
-    .cta-box{
-      margin-top:16px;
-      padding:14px 14px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,0.10);
-      background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(0,0,0,0.95));
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-
-    .cta-box .left h3{
-      font-family:"Cinzel",serif;
-      color:var(--silver-strong);
-      letter-spacing:0.16em;
-      text-transform:uppercase;
-      font-size:0.95rem;
-      margin-bottom:4px;
-    }
-
-    .cta-box .left p{
-      color:rgba(213,213,213,0.78);
-      font-size:0.86rem;
-      line-height:1.5;
-      max-width:640px;
+    .closing .sig{
+      font-family:"Cinzel", serif;
+      text-transform: uppercase;
+      letter-spacing: 0.26em;
+      color: var(--silver-strong);
+      font-size: 0.86rem;
+      margin-top: 10px;
     }
 
     footer{
-      margin-top:26px;
-      font-size:0.7rem;
-      text-transform:uppercase;
-      letter-spacing:0.25em;
-      color:var(--silver-deep);
+      margin-top: 26px;
       text-align:center;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      color: var(--silver-deep);
     }
-    footer span{ color:var(--silver-strong); }
+    footer span{ color: var(--silver-strong); }
 
-    @media (max-width:480px){
-      .wrapper{ padding:14px 12px 28px; }
-      .card{ padding:16px 12px 20px; border-radius:18px; }
-      .brand-text h1{ font-size:1.1rem; letter-spacing:0.18em; }
-      .hero-copy h2{ font-size:1.1rem; }
+    /* Mobile */
+    @media (max-width: 480px){
+      .wrapper{ padding: 14px 12px 28px; }
+      .card{ padding: 16px 12px 20px; border-radius: 18px; }
+
+      .brand-text .name{ font-size: 0.86rem; }
+      .brand-text .sub{ font-size: 0.72rem; }
+
+      .pill{ padding: 8px 12px; font-size: 0.7rem; }
+      .content{ font-size: 0.96rem; line-height: 1.82; }
+      .quote .line{ font-size: 0.92rem; }
+    }
+
+    /* Reduce motion */
+    @media (prefers-reduced-motion: reduce){
+      *{ transition: none !important; scroll-behavior: auto !important; }
     }
   </style>
 </head>
@@ -344,138 +336,97 @@
 <body>
   <div class="wrapper">
     <div class="card">
-
-      <header>
-        <div class="brand-mark">
+      <!-- Topbar -->
+      <div class="topbar">
+        <div class="brand">
           <div class="crest">
-            <img src="phoenix.png" alt="Phoenixborne Oath">
+            <img src="/phoenix.png" alt="Phoenixborne Oath" />
           </div>
           <div class="brand-text">
-            <h1>PHOENIXBORNE <span>OATH</span></h1>
-            <p>Manifesto resmi — sumpah kebangkitan, narasi tiap drop, dan jalan yang tidak untuk semua orang.</p>
+            <div class="name">PHOENIXBORNE OATH</div>
+            <div class="sub">Official Realm</div>
           </div>
         </div>
 
-        <div class="tagline">Gothic • Silver • Oathbound</div>
-
-        <div class="top-actions">
-          <a class="btn" href="/">
-            <span>Back</span>
-            <span class="muted">Homepage</span>
-          </a>
-
-          <a class="btn" href="https://phoenixborneoath.com/" target="_blank" rel="noopener">
-            <span>Store</span>
-            <span class="muted">Official Shop</span>
-          </a>
+        <div class="nav-actions">
+          <a class="pill" href="/" aria-label="Kembali ke Home">Home</a>
+          <a class="pill" href="/#links" aria-label="Link Official">Links</a>
+          <a class="pill" href="/products.html" aria-label="Official Shop">Shop</a>
         </div>
+      </div>
+
+      <!-- Header -->
+      <header class="head">
+        <div class="kicker">The Oath • The Ash • The Rise</div>
+        <h1>Manifesto</h1>
+        <div class="divider"></div>
       </header>
 
-      <!-- INTRO -->
-      <section class="section">
-        <div class="section-title">Gerbang Manifesto</div>
-        <div class="hero-copy">
-          <h2>The Oath of Rebirth</h2>
+      <!-- Content -->
+      <main class="content">
+        <div class="quote" aria-label="Opening quote">
+          <div class="line">Kami tidak lahir dari kemewahan.</div>
+          <div class="line">Kami lahir dari abu.</div>
+        </div>
+
+        <p>
+          <strong>Phoenixborne Oath</strong> berdiri bukan untuk mengikuti arus,
+          tetapi untuk bangkit dari kehancuran yang pernah nyata.
+        </p>
+
+        <p>
+          Kami percaya: sesuatu yang mati dengan kehormatan
+          akan bangkit dengan sumpah yang lebih kuat.
+        </p>
+
+        <section class="oath" aria-label="Sumpah Phoenixborne Oath">
+          <div class="title">Kami bersumpah</div>
+          <ol>
+            <li><strong>Tidak menciptakan tanpa makna.</strong> Setiap artikel membawa cerita, luka, dan kebangkitan.</li>
+            <li><strong>Tidak memproduksi berlebihan.</strong> Apa yang lahir terbatas — apa yang habis tidak diulang.</li>
+            <li><strong>Tidak tunduk pada tren sesaat.</strong> Kami berdiri pada identitas, bukan algoritma.</li>
+            <li><strong>Tidak menjual ilusi.</strong> Kami menjual simbol, sumpah, dan keberanian.</li>
+          </ol>
+        </section>
+
+        <p>
+          <strong>Phoenixborne</strong> adalah tentang mati dan bangkit.
+          <strong>Oath</strong> adalah tentang janji yang tidak bisa ditarik kembali.
+        </p>
+
+        <p>
+          Ketika kamu mengenakan Phoenixborne Oath,
+          kamu membawa kisah tentang kehancuran, kesendirian,
+          dan keputusan untuk bangkit tanpa izin siapa pun.
+        </p>
+
+        <div class="closing" aria-label="Closing">
           <p>
-            Phoenixborne Oath bukan hanya brand. Ini adalah sumpah: tentang runtuh, tentang sunyi,
-            tentang api yang tersisa—dan pilihan untuk hidup kembali tanpa meminta ampun pada dunia.
+            <strong>Ini bukan sekadar pakaian.</strong><br />
+            Ini adalah tanda bahwa kamu pernah jatuh<br />
+            dan memilih untuk bangkit.
           </p>
+          <div class="sig">Sworn to rise again.</div>
         </div>
-
-        <div class="divider"></div>
-
-        <div class="oath-grid">
-          <div class="ritual">
-            <div class="sigil">Words of the Realm</div>
-            <div class="line">
-              “Yang lahir dari abu tidak mencari validasi.<br />
-              Ia hanya berjalan—dan meninggalkan tanda.”
-            </div>
-          </div>
-
-          <div class="ritual">
-            <div class="sigil">Rule of the Drop</div>
-            <div class="line">
-              Drop terbatas. Tanpa restock.<br />
-              Karena momen sumpah tidak pernah hadir dua kali.
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- CHAPTERS -->
-      <section class="section">
-        <div class="section-title">Bab Sumpah</div>
-
-        <div class="chapters">
-          <div class="chapter">
-            <div class="kicker">I — From Ash</div>
-            <div class="title">Kami lahir dari kehancuran, bukan kenyamanan.</div>
-            <div class="text">
-              Phoenixborne adalah nama untuk mereka yang pernah habis, lalu kembali berdiri.
-              Tidak ada romantisasi rasa sakit—yang ada hanya disiplin untuk bertahan.
-            </div>
-          </div>
-
-          <div class="chapter">
-            <div class="kicker">II — The Mark</div>
-            <div class="title">Setiap artikel adalah simbol, bukan hiasan.</div>
-            <div class="text">
-              Desain tidak dibuat untuk ramai. Ia dibuat untuk berkesan.
-              Garis, bentuk, dan detail adalah tanda: siapa kamu, dan apa yang sudah kamu lewati.
-            </div>
-          </div>
-
-          <div class="chapter">
-            <div class="kicker">III — The Story</div>
-            <div class="title">Ada narasi di setiap drop.</div>
-            <div class="text">
-              Tiap rilisan membawa fragmen kisah: kematian, kebangkitan, sumpah baru.
-              Kamu tidak sekadar “pakai”—kamu membawa cerita itu keluar ke jalanan.
-            </div>
-          </div>
-
-          <div class="chapter">
-            <div class="kicker">IV — No Restock</div>
-            <div class="title">Yang terlambat bukan rugi—dia hanya tidak hadir.</div>
-            <div class="text">
-              Bukan tentang membuat orang panik. Ini tentang menjaga sakralnya momen.
-              Jika kamu hadir, kamu memiliki bagian dari sejarah drop itu.
-            </div>
-          </div>
-
-          <div class="chapter">
-            <div class="kicker">V — Not For Everyone</div>
-            <div class="title">Ini untuk yang bertahan. Dan memang begitu.</div>
-            <div class="text">
-              Untuk yang pernah jatuh tapi tidak mengemis simpati.
-              Untuk yang memilih bangkit berulang kali. Untuk yang memahami arti sumpah.
-            </div>
-          </div>
-        </div>
-
-        <div class="cta-box">
-          <div class="left">
-            <h3>Closing Oath</h3>
-            <p>
-              Kami bersumpah: tidak kembali menjadi versi lama.<br />
-              Kami bersumpah: tidak takut pada api.<br />
-              Kami bersumpah: bangkit, bahkan saat dunia berharap kami padam.
-            </p>
-          </div>
-
-          <a class="btn" href="https://www.instagram.com/phoenixborneoath" target="_blank" rel="noopener">
-            <span>Join</span>
-            <span class="muted">Instagram</span>
-          </a>
-        </div>
-      </section>
+      </main>
 
       <footer>
-        <span>Phoenixborne Oath</span> — sworn to rise again.
+        <span>Phoenixborne Oath</span> — the oath remains.
       </footer>
-
     </div>
   </div>
+
+  <script>
+    // Optional: smooth scroll on hash links
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener("click",(e)=>{
+        const id = a.getAttribute("href");
+        const el = document.querySelector(id);
+        if(!el) return;
+        e.preventDefault();
+        el.scrollIntoView({behavior:"smooth"});
+      });
+    });
+  </script>
 </body>
 </html>
