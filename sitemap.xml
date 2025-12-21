@@ -1,19 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
   <url>
     <loc>https://phoenixborneoath.id/</loc>
-    <priority>1.00</priority>
   </url>
-
   <url>
-    <loc>https://phoenixborneoath.id/about.html</loc>
-    <priority>0.70</priority>
+    <loc>https://phoenixborneoath.id/shop.html</loc>
   </url>
-
-  <url>
-    <loc>https://phoenixborneoath.id/contact.html</loc>
-    <priority>0.70</priority>
-  </url>
-
 </urlset>
