@@ -29,6 +29,66 @@
   </script>
 
   <style>
+    .manifesto-cta{
+  margin-top: 22px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.mcta-btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  border-radius: 14px;
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,.22);
+  background: rgba(255,255,255,.08);
+  color: rgba(255,255,255,.92);
+  font-weight: 700;
+  letter-spacing: .2px;
+  transition: transform .15s ease, background .15s ease, border-color .15s ease, box-shadow .15s ease;
+}
+
+.mcta-btn:hover{
+  transform: translateY(-1px);
+  background: rgba(255,255,255,.12);
+  border-color: rgba(255,255,255,.30);
+  box-shadow: 0 10px 26px rgba(0,0,0,.35);
+}
+
+.mcta-btn:focus-visible{
+  outline: 2px solid rgba(255,255,255,.55);
+  outline-offset: 3px;
+}
+
+.mcta-mark{
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: rgba(255,255,255,.10);
+  border: 1px solid rgba(255,255,255,.12);
+  opacity: .95;
+}
+
+.mcta-arrow{ opacity: .9; }
+
+.mcta-link{
+  color: rgba(255,255,255,.78);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,.18);
+  padding-bottom: 2px;
+}
+
+.mcta-link:hover{
+  color: rgba(255,255,255,.92);
+  border-bottom-color: rgba(255,255,255,.30);
+}
     :root{
   --banner-height: 56px;
   --bg:#050507;
@@ -410,6 +470,17 @@
           </p>
           <div class="sig">Sworn to rise again.</div>
         </div>
+        <div class="manifesto-cta">
+  <a class="mcta-btn" href="https://phoenixborneoath.com/" target="_blank" rel="noopener">
+    <span class="mcta-mark" aria-hidden="true">⟁</span>
+    Masuk ke Official Store
+    <span class="mcta-arrow" aria-hidden="true">→</span>
+  </a>
+
+  <a class="mcta-link" href="/" aria-label="Kembali ke Official Realm">
+    Kembali ke Official Realm
+  </a>
+</div>
       </main>
 
       <footer>
